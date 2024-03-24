@@ -10,8 +10,14 @@
 
 	$effect(() => {
 		if (!node) return;
-		node.style.left = `${swindow.position.x}px`;
-		node.style.top = `${swindow.position.y}px`;
+		const { x, y } = swindow.position;
+		const newX =
+			x < -swindow.size.x + 8 ? 0 : x > window.innerWidth - 4 ? window.innerWidth - 8 : x;
+		const newY =
+			y < -swindow.size.y + 8 ? 0 : y > window.innerHeight - 4 ? window.innerHeight - 8 : y;
+
+		node.style.left = `${newX}px`;
+		node.style.top = `${newY}px`;
 	});
 
 	$effect(() => {
