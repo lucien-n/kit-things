@@ -21,6 +21,6 @@
 	});
 </script>
 
-<article transition:scale class="border bg-white shadow-md" bind:this={node}>
+<article transition:scale class="bg-background border shadow-md" bind:this={node}>
 	<Titlebar {window} />
 </article>
