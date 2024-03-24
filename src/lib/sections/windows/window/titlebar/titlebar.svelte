@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Cross1 } from 'radix-icons-svelte';
-	import { TitlebarAction, type TitlebarProps } from '.';
 	import { Vector } from '$lib/utils';
+	import { Cross1, EnterFullScreen, ExitFullScreen } from 'radix-icons-svelte';
+	import { TitlebarAction, type TitlebarProps } from '.';
 
 	const { window }: TitlebarProps = $props();
 
@@ -47,6 +47,15 @@
 		<p>{window.details.title}</p>
 	</span>
 	<div class="flex h-8">
+		{#if window.fullscreen}
+			<TitlebarAction onclick={() => console.log('to implement')}>
+				<ExitFullScreen />
+			</TitlebarAction>
+		{:else}
+			<TitlebarAction onclick={() => window.maximise()}>
+				<EnterFullScreen />
+			</TitlebarAction>
+		{/if}
 		<TitlebarAction onclick={() => window.close()}>
 			<Cross1 />
 		</TitlebarAction>

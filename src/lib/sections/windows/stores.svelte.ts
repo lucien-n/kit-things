@@ -9,7 +9,9 @@ export type WindowStore = {
 	details: WindowDetails;
 	position: Vector;
 	size: Vector;
+	fullscreen: boolean;
 	close: VoidFunction;
+	maximise: VoidFunction;
 };
 
 type WindowStoreInitValue = Partial<Omit<Window, 'id'>>;
@@ -26,9 +28,15 @@ export const createWindowStore = ({
 	const details = $state<WindowDetails>({ icon: icon ?? '❓', title: title ?? 'Generic window' });
 	let position = $state<Vector>(new Vector(x, y));
 	let size = $state<Vector>(new Vector(width ?? 640, height ?? 360));
+	let fullscreen = $state<boolean>(false);
 
 	const close = () => {
 		desktop.closeWindow(id);
+	};
+
+	const maximise = () => {
+		size = new Vector(window.innerWidth, window.innerHeight);
+		fullscreen = true;
 	};
 
 	return {
@@ -48,7 +56,11 @@ export const createWindowStore = ({
 		set size(newSize: Vector) {
 			size = newSize;
 		},
-		close
+		get fullscreen() {
+			return fullscreen;
+		},
+		close,
+		maximise
 	};
 };
 
