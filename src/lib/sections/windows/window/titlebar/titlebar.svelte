@@ -4,7 +4,7 @@
 	import { TitlebarAction, type TitlebarProps } from '.';
 	import { sdesktop } from '../..';
 
-	const { window }: TitlebarProps = $props();
+	const { swindow }: TitlebarProps = $props();
 
 	let node: HTMLElement | undefined;
 	let clicking = false;
@@ -17,28 +17,28 @@
 		const offsetX = event.clientX - initialMousePosition.x;
 		const offsetY = event.clientY - initialMousePosition.y;
 
-		if (lastWindowPosition) window.position = lastWindowPosition.add(new Vector(offsetX, offsetY));
+		if (lastWindowPosition) swindow.position = lastWindowPosition.add(new Vector(offsetX, offsetY));
 
-		if (window.isFullscreen()) {
+		if (swindow.isFullscreen()) {
 			console.log(event.clientX);
-			window.previousPosition = new Vector(
-				event.clientX + window.size.x / 2,
+			swindow.previousPosition = new Vector(
+				event.clientX + swindow.size.x / 2,
 				event.clientY - node.getBoundingClientRect().height / 2
 			);
-			window.exitFullscreen();
+			swindow.exitFullscreen();
 		}
 	};
 
 	const handleMouseDown = (event: MouseEvent) => {
 		clicking = true;
 		initialMousePosition = new Vector(event.clientX, event.clientY);
-		lastWindowPosition = window.position;
+		lastWindowPosition = swindow.position;
 	};
 
 	const handleMouseUp = () => {
 		clicking = false;
 		initialMousePosition = undefined;
-		lastWindowPosition = window.position;
+		lastWindowPosition = swindow.position;
 	};
 </script>
 
@@ -52,22 +52,22 @@
 	onmouseup={handleMouseUp}
 	onmouseleave={handleMouseUp}
 >
-	<div class="absolute -top-7">{window.position}</div>
+	<div class="absolute -top-7">{swindow.position}</div>
 	<span class="ml-1 flex gap-1 text-foreground">
-		{window.icon}
-		<p>{window.title}</p>
+		{swindow.icon}
+		<p>{swindow.title}</p>
 	</span>
 	<div class="flex h-8">
-		{#if window.isFullscreen()}
-			<TitlebarAction onclick={() => window.exitFullscreen()}>
+		{#if swindow.isFullscreen()}
+			<TitlebarAction onclick={() => swindow.exitFullscreen()}>
 				<ExitFullScreen />
 			</TitlebarAction>
 		{:else}
-			<TitlebarAction onclick={() => window.enterFullscreen()}>
+			<TitlebarAction onclick={() => swindow.enterFullscreen()}>
 				<EnterFullScreen />
 			</TitlebarAction>
 		{/if}
-		<TitlebarAction onclick={() => sdesktop.removeWindow(window.id)}>
+		<TitlebarAction onclick={() => sdesktop.removeWindow(swindow.id)}>
 			<Cross1 />
 		</TitlebarAction>
 	</div>

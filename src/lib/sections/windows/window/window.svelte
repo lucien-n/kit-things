@@ -4,7 +4,7 @@
 	import { sdesktop } from '..';
 	import { Titlebar } from './titlebar';
 
-	const { swindow: swindow }: WindowProps = $props();
+	const { swindow }: WindowProps = $props();
 
 	let node = $state<HTMLElement | undefined>();
 
@@ -28,5 +28,5 @@
 	bind:this={node}
 	onmousedown={() => sdesktop.focusWindow(swindow.id)}
 >
-	<Titlebar window={swindow} />
+	<Titlebar {swindow} />
 </article>

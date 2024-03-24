@@ -5,7 +5,7 @@ import type { HTMLButtonAttributes } from 'svelte/elements';
 import { Swindow } from '../../models/swindow.svelte';
 
 type TitlebarProps = {
-	window: Swindow;
+	swindow: Swindow;
 };
 
 type TitlebarActionProps = {
