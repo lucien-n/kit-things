@@ -24,4 +24,8 @@ export class Vector {
 	divide(vector: Vector) {
 		return new Vector(this.x / vector.x, this.y / vector.y);
 	}
+
+	toString() {
+		return `x: ${this.x} y: ${this.y}`;
+	}
 }
