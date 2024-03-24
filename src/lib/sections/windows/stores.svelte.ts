@@ -2,9 +2,11 @@ import type { Window } from './types';
 import { nanoid } from 'nanoid';
 import { Vector } from '../../utils';
 
+type WindowDetails = { icon: string; title: string };
+
 export type WindowStore = {
 	id: string;
-	title: string;
+	details: WindowDetails;
 	position: Vector;
 	size: Vector;
 	close: VoidFunction;
@@ -12,11 +14,18 @@ export type WindowStore = {
 
 type WindowStoreInitValue = Partial<Omit<Window, 'id'>>;
 
-export const createWindowStore = (initValue: WindowStoreInitValue): WindowStore => {
+export const createWindowStore = ({
+	icon,
+	title,
+	x = 0,
+	y = 0,
+	width = 640,
+	height = 360
+}: WindowStoreInitValue): WindowStore => {
 	const id = nanoid();
-	const title = $state(initValue.title ?? 'Basic window');
-	const position = $state<Vector>(new Vector(initValue.x, initValue.y));
-	const size = $state<Vector>(new Vector(initValue.width ?? 640, initValue.height ?? 360));
+	const details = $state<WindowDetails>({ icon: icon ?? '❓', title: title ?? 'Generic window' });
+	const position = $state<Vector>(new Vector(x, y));
+	const size = $state<Vector>(new Vector(width ?? 640, height ?? 360));
 
 	const close = () => {
 		desktop.closeWindow(id);
@@ -24,8 +33,8 @@ export const createWindowStore = (initValue: WindowStoreInitValue): WindowStore 
 
 	return {
 		id,
-		get title() {
-			return title;
+		get details() {
+			return details;
 		},
 		get position() {
 			return position;
@@ -51,7 +60,7 @@ export const createDesktopStore = (): DesktopStore => {
 		const window = createWindowStore(values);
 		windows.push(window);
 
-		console.log(`Created new window "${window.title}"`);
+		console.log(`Created new window "${window.details.title}"`);
 
 		return window;
 	};

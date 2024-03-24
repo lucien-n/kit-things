@@ -2,7 +2,7 @@
 	import { desktop } from './stores.svelte';
 	import Window from './window/window.svelte';
 
-	desktop.createWindow({ title: 'Basic window' });
+	desktop.createWindow({ icon: '😎', title: 'Basic window' });
 </script>
 
 {#each desktop.windows as window (window.id)}
