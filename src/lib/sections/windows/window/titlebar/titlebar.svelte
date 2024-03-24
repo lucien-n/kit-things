@@ -2,7 +2,7 @@
 	import { Vector } from '$lib/vector.svelte';
 	import { Cross1, EnterFullScreen, ExitFullScreen } from 'radix-icons-svelte';
 	import { TitlebarAction, type TitlebarProps } from '.';
-	import { desktop } from '../../stores.svelte';
+	import { sdesktop } from '../..';
 
 	const { window }: TitlebarProps = $props();
 
@@ -61,7 +61,7 @@
 				<EnterFullScreen />
 			</TitlebarAction>
 		{/if}
-		<TitlebarAction onclick={() => desktop.closeWindow(window.id)}>
+		<TitlebarAction onclick={() => sdesktop.removeWindow(window.id)}>
 			<Cross1 />
 		</TitlebarAction>
 	</div>

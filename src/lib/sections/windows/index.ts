@@ -1,3 +1,6 @@
 import Desktop from './desktop.svelte';
+import { Sdesktop } from './models/sdesktop.svelte';
 
-export { Desktop };
+const sdesktop = new Sdesktop();
+
+export { Desktop, sdesktop };
