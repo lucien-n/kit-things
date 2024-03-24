@@ -13,6 +13,11 @@
 			console.warn(`node not found for window "${window.id}"`);
 			return;
 		}
+	});
+
+	$effect(() => {
+		if (!node) return;
+		console.log(window.position);
 
 		node.style.left = `${window.position.x}px`;
 		node.style.top = `${window.position.y}px`;
@@ -21,6 +26,6 @@
 	});
 </script>
 
-<article transition:scale class="bg-background border shadow-md" bind:this={node}>
+<article transition:scale class="bg-background absolute border shadow-md" bind:this={node}>
 	<Titlebar {window} />
 </article>

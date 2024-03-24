@@ -24,8 +24,8 @@ export const createWindowStore = ({
 }: WindowStoreInitValue): WindowStore => {
 	const id = nanoid();
 	const details = $state<WindowDetails>({ icon: icon ?? '❓', title: title ?? 'Generic window' });
-	const position = $state<Vector>(new Vector(x, y));
-	const size = $state<Vector>(new Vector(width ?? 640, height ?? 360));
+	let position = $state<Vector>(new Vector(x, y));
+	let size = $state<Vector>(new Vector(width ?? 640, height ?? 360));
 
 	const close = () => {
 		desktop.closeWindow(id);
@@ -39,8 +39,14 @@ export const createWindowStore = ({
 		get position() {
 			return position;
 		},
+		set position(newPosition: Vector) {
+			position = newPosition;
+		},
 		get size() {
 			return size;
+		},
+		set size(newSize: Vector) {
+			size = newSize;
 		},
 		close
 	};
