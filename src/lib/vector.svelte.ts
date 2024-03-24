@@ -1,8 +1,8 @@
 export class Vector {
 	static ZERO = new Vector(0, 0);
 
-	x: number = 0;
-	y: number = 0;
+	x: number = $state(0);
+	y: number = $state(0);
 
 	constructor(x: number = 0, y: number = 0) {
 		this.x = x;

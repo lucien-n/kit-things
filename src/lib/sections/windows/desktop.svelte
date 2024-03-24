@@ -1,10 +1,15 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { desktop } from './stores.svelte';
 	import Window from './window/window.svelte';
+	import { Swindow } from './models/window.svelte';
 
-	desktop.createWindow({ icon: '😎', title: 'Basic window' });
+	onMount(() => {
+		const defaultWindow = new Swindow('Default window', '😎');
+		desktop.addWindow(defaultWindow);
+	});
 </script>
 
-{#each desktop.windows as window (window.id)}
+{#each desktop.swindows as window (window.id)}
 	<Window {window} />
 {/each}

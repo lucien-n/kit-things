@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { Vector } from '$lib/utils';
+	import { Vector } from '$lib/vector.svelte';
 	import { Cross1, EnterFullScreen, ExitFullScreen } from 'radix-icons-svelte';
 	import { TitlebarAction, type TitlebarProps } from '.';
+	import { desktop } from '../../stores.svelte';
 
 	const { window }: TitlebarProps = $props();
 
@@ -18,7 +19,7 @@
 
 		if (lastWindowPosition) window.position = lastWindowPosition.add(new Vector(offsetX, offsetY));
 
-		if (window.fullscreen) {
+		if (window.isFullscreen()) {
 			window.exitFullscreen(); // todo: fix window being reset to last position and so needing to readjust mouse pos after
 		}
 	};
@@ -47,11 +48,11 @@
 	onmouseleave={handleMouseUp}
 >
 	<span class="text-foreground ml-1 flex gap-1">
-		{window.details.icon}
-		<p>{window.details.title}</p>
+		{window.icon}
+		<p>{window.title}</p>
 	</span>
 	<div class="flex h-8">
-		{#if window.fullscreen}
+		{#if window.isFullscreen()}
 			<TitlebarAction onclick={() => window.exitFullscreen()}>
 				<ExitFullScreen />
 			</TitlebarAction>
@@ -60,7 +61,7 @@
 				<EnterFullScreen />
 			</TitlebarAction>
 		{/if}
-		<TitlebarAction onclick={() => window.close()}>
+		<TitlebarAction onclick={() => desktop.closeWindow(window.id)}>
 			<Cross1 />
 		</TitlebarAction>
 	</div>
