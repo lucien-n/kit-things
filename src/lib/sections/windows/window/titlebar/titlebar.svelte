@@ -17,6 +17,10 @@
 		const offsetY = event.clientY - initialMousePosition.y;
 
 		if (lastWindowPosition) window.position = lastWindowPosition.add(new Vector(offsetX, offsetY));
+
+		if (window.fullscreen) {
+			window.exitFullscreen(); // todo: fix window being reset to last position and so needing to readjust mouse pos after
+		}
 	};
 
 	const handleMouseDown = (event: MouseEvent) => {
@@ -48,11 +52,11 @@
 	</span>
 	<div class="flex h-8">
 		{#if window.fullscreen}
-			<TitlebarAction onclick={() => console.log('to implement')}>
+			<TitlebarAction onclick={() => window.exitFullscreen()}>
 				<ExitFullScreen />
 			</TitlebarAction>
 		{:else}
-			<TitlebarAction onclick={() => window.maximise()}>
+			<TitlebarAction onclick={() => window.enterFullscreen()}>
 				<EnterFullScreen />
 			</TitlebarAction>
 		{/if}

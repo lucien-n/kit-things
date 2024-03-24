@@ -11,7 +11,8 @@ export type WindowStore = {
 	size: Vector;
 	fullscreen: boolean;
 	close: VoidFunction;
-	maximise: VoidFunction;
+	enterFullscreen: VoidFunction;
+	exitFullscreen: VoidFunction;
 };
 
 type WindowStoreInitValue = Partial<Omit<Window, 'id'>>;
@@ -26,17 +27,30 @@ export const createWindowStore = ({
 }: WindowStoreInitValue): WindowStore => {
 	const id = nanoid();
 	const details = $state<WindowDetails>({ icon: icon ?? '❓', title: title ?? 'Generic window' });
+
 	let position = $state<Vector>(new Vector(x, y));
 	let size = $state<Vector>(new Vector(width ?? 640, height ?? 360));
+
 	let fullscreen = $state<boolean>(false);
+	let previousSize = $state<Vector>(Vector.ZERO);
+	let previousPosition = $state<Vector>(Vector.ZERO);
 
 	const close = () => {
 		desktop.closeWindow(id);
 	};
 
-	const maximise = () => {
+	const enterFullscreen = () => {
+		previousSize = size;
+		previousPosition = position;
 		size = new Vector(window.innerWidth, window.innerHeight);
+		position = Vector.ZERO;
 		fullscreen = true;
+	};
+
+	const exitFullscreen = () => {
+		size = previousSize;
+		position = previousPosition;
+		fullscreen = false;
 	};
 
 	return {
@@ -60,7 +74,8 @@ export const createWindowStore = ({
 			return fullscreen;
 		},
 		close,
-		maximise
+		enterFullscreen,
+		exitFullscreen
 	};
 };
 
