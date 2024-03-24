@@ -3,6 +3,7 @@
 	import { scale } from 'svelte/transition';
 	import type { WindowProps } from '.';
 	import { Titlebar } from './titlebar';
+	import { sdesktop } from '..';
 
 	const { window }: WindowProps = $props();
 
@@ -28,6 +29,12 @@
 	});
 </script>
 
-<article transition:scale class="bg-background absolute border shadow-md" bind:this={node}>
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<article
+	transition:scale
+	class="bg-background absolute border shadow-md"
+	bind:this={node}
+	onmousedown={() => sdesktop.focusWindow(window.id)}
+>
 	<Titlebar {window} />
 </article>

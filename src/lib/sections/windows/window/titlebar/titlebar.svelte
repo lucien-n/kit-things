@@ -28,7 +28,6 @@
 		clicking = true;
 		initialMousePosition = new Vector(event.clientX, event.clientY);
 		lastWindowPosition = window.position;
-		sdesktop.focusWindow(window.id);
 	};
 
 	const handleMouseUp = () => {
