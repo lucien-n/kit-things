@@ -20,7 +20,12 @@
 		if (lastWindowPosition) window.position = lastWindowPosition.add(new Vector(offsetX, offsetY));
 
 		if (window.isFullscreen()) {
-			window.exitFullscreen(); // todo: fix window being reset to last position and so needing to readjust mouse pos after
+			console.log(event.clientX);
+			window.previousPosition = new Vector(
+				event.clientX + window.size.x / 2,
+				event.clientY - node.getBoundingClientRect().height / 2
+			);
+			window.exitFullscreen();
 		}
 	};
 
@@ -42,12 +47,13 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <section
 	bind:this={node}
-	class="center bg-background h-8 select-none justify-between border-b"
+	class="center relative h-8 select-none justify-between border-b bg-background"
 	onmousedown={handleMouseDown}
 	onmouseup={handleMouseUp}
 	onmouseleave={handleMouseUp}
 >
-	<span class="text-foreground ml-1 flex gap-1">
+	<div class="absolute -top-7">{window.position}</div>
+	<span class="ml-1 flex gap-1 text-foreground">
 		{window.icon}
 		<p>{window.title}</p>
 	</span>
