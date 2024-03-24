@@ -4,20 +4,20 @@
 	import { sdesktop } from '..';
 	import { Titlebar } from './titlebar';
 
-	const { window }: WindowProps = $props();
+	const { swindow: swindow }: WindowProps = $props();
 
 	let node = $state<HTMLElement | undefined>();
 
 	$effect(() => {
 		if (!node) return;
-		node.style.left = `${window.position.x}px`;
-		node.style.top = `${window.position.y}px`;
+		node.style.left = `${swindow.position.x}px`;
+		node.style.top = `${swindow.position.y}px`;
 	});
 
 	$effect(() => {
 		if (!node) return;
-		node.style.width = `${window.size.x}px`;
-		node.style.height = `${window.size.y}px`;
+		node.style.width = `${swindow.size.x <= window.innerWidth ? swindow.size.x : window.innerWidth}px`;
+		node.style.height = `${swindow.size.y <= window.innerHeight ? swindow.size.y : window.innerHeight}px`;
 	});
 </script>
 
@@ -26,7 +26,7 @@
 	transition:scale
 	class="absolute border bg-background shadow-md"
 	bind:this={node}
-	onmousedown={() => sdesktop.focusWindow(window.id)}
+	onmousedown={() => sdesktop.focusWindow(swindow.id)}
 >
-	<Titlebar {window} />
+	<Titlebar window={swindow} />
 </article>

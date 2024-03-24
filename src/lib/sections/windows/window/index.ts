@@ -1,8 +1,8 @@
-import type { WindowStore } from '../stores.svelte';
+import type { Swindow } from '../models/swindow.svelte';
 import Window from './window.svelte';
 
 type WindowProps = {
-	window: WindowStore;
+	swindow: Swindow;
 };
 
 export { Window, type WindowProps };
