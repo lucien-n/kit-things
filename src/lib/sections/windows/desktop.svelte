@@ -13,6 +13,6 @@
 	});
 </script>
 
-{#each sdesktop.swindows as window (window.id)}
-	<Window {window} />
+{#each sdesktop.swindows as swindow (swindow.id)}
+	<Window {swindow} />
 {/each}
