@@ -5,8 +5,8 @@
 	const { window }: TitlebarProps = $props();
 </script>
 
-<section class="center h-8 select-none justify-between border-b">
-	<span class="flex gap-1">
+<section class="center bg-background h-8 select-none justify-between border-b">
+	<span class="text-foreground flex gap-1">
 		{window.details.icon}
 		<p>{window.details.title}</p>
 	</span>

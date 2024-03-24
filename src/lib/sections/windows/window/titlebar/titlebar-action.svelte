@@ -5,7 +5,7 @@
 </script>
 
 <button
-	class="center aspect-square h-full overflow-hidden transition-all duration-100 hover:bg-black/10"
+	class="center hover:bg-primary-foreground aspect-square h-full overflow-hidden border-b transition-all duration-100"
 	{onclick}
 >
 	{@render children()}
