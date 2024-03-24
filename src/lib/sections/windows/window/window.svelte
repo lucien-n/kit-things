@@ -17,9 +17,12 @@
 
 	$effect(() => {
 		if (!node) return;
-
 		node.style.left = `${window.position.x}px`;
 		node.style.top = `${window.position.y}px`;
+	});
+
+	$effect(() => {
+		if (!node) return;
 		node.style.width = `${window.size.x}px`;
 		node.style.height = `${window.size.y}px`;
 	});
