@@ -42,7 +42,7 @@
 	onmouseup={handleMouseUp}
 	onmouseleave={handleMouseUp}
 >
-	<span class="text-foreground flex gap-1">
+	<span class="text-foreground ml-1 flex gap-1">
 		{window.details.icon}
 		<p>{window.details.title}</p>
 	</span>
