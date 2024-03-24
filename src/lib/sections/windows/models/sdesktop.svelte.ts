@@ -16,4 +16,12 @@ export class Sdesktop {
 	removeWindow(id: string) {
 		this.swindows = this.swindows.filter((swindow) => swindow.id !== id);
 	}
+
+	focusWindow(id: string) {
+		const swindow = this.getWindow(id);
+		if (!swindow) return;
+
+		this.removeWindow(id);
+		this.addWindow(swindow);
+	}
 }

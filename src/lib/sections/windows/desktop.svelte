@@ -7,6 +7,9 @@
 	onMount(() => {
 		const defaultWindow = new Swindow('Default window', '😎');
 		sdesktop.addWindow(defaultWindow);
+
+		const otherWindow = new Swindow('Other window', '🛒');
+		sdesktop.addWindow(otherWindow);
 	});
 </script>
 
