@@ -10,12 +10,6 @@
 	let initialMousePosition: Vector | undefined;
 	let lastWindowPosition: Vector | undefined;
 
-	const handleMouseDown = (event: MouseEvent) => {
-		clicking = true;
-		initialMousePosition = new Vector(event.clientX, event.clientY);
-		lastWindowPosition = window.position; // Store the current window position
-	};
-
 	const handleMouseMove = (event: MouseEvent) => {
 		if (!clicking || !initialMousePosition || !node) return;
 
@@ -23,6 +17,12 @@
 		const offsetY = event.clientY - initialMousePosition.y;
 
 		if (lastWindowPosition) window.position = lastWindowPosition.add(new Vector(offsetX, offsetY));
+	};
+
+	const handleMouseDown = (event: MouseEvent) => {
+		clicking = true;
+		initialMousePosition = new Vector(event.clientX, event.clientY);
+		lastWindowPosition = window.position;
 	};
 
 	const handleMouseUp = () => {
