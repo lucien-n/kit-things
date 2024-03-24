@@ -1,20 +1,12 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { scale } from 'svelte/transition';
 	import type { WindowProps } from '.';
-	import { Titlebar } from './titlebar';
 	import { sdesktop } from '..';
+	import { Titlebar } from './titlebar';
 
 	const { window }: WindowProps = $props();
 
 	let node = $state<HTMLElement | undefined>();
-
-	onMount(() => {
-		if (!node) {
-			console.warn(`node not found for window "${window.id}"`);
-			return;
-		}
-	});
 
 	$effect(() => {
 		if (!node) return;
@@ -32,7 +24,7 @@
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <article
 	transition:scale
-	class="bg-background absolute border shadow-md"
+	class="absolute border bg-background shadow-md"
 	bind:this={node}
 	onmousedown={() => sdesktop.focusWindow(window.id)}
 >
