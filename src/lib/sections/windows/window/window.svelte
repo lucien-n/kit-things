@@ -17,7 +17,6 @@
 
 	$effect(() => {
 		if (!node) return;
-		console.log(window.position);
 
 		node.style.left = `${window.position.x}px`;
 		node.style.top = `${window.position.y}px`;
