@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { Label } from '$shadcn/ui/ui';
 
 	type Dot = {
 		startX: number;
@@ -123,6 +124,7 @@
 	<div class="bg-neutral-600 bg-opacity-80 px-3 py-2 text-white">
 		<p><strong>DT</strong> {dt}</p>
 		<section>
+			<Label />
 			<label for="clearCB">
 				<strong>CLEAR</strong>
 			</label>

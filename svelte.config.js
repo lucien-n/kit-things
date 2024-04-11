@@ -15,7 +15,8 @@ const config = {
 		alias: {
 			$routes: './src/lib/ROUTES.ts',
 			$ui: './src/lib/ui',
-			$windows: './src/lib/sections/windows'
+			$windows: './src/lib/sections/windows',
+			$shadcn: './src/lib/shadcn'
 		}
 	}
 };

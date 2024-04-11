@@ -7,7 +7,7 @@
 		"baseColor": "neutral"
 	},
 	"aliases": {
-		"components": "$lib/shadcn/ui",
+		"components": "$lib/shadcn/",
 		"utils": "$lib/shadcn/utils"
 	},
 	"typescript": true
