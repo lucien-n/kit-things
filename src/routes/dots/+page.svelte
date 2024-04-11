@@ -25,7 +25,6 @@
 	let velocityCap = $state(0.3);
 	let maxDistanceFromStart = $state(25);
 	let clear = $state(true);
-	let drawDebug = $state(false);
 
 	const generateDots = (): Dot[] => {
 		const dots: Dot[] = [];
@@ -71,41 +70,6 @@
 		}
 
 		for (const dot of dots) {
-			dot.velY += velocity;
-			dot.velX += velocity;
-
-			if (dot.velY > velocityCap) dot.velY = velocityCap;
-			if (dot.velY < -velocityCap) dot.velY = -velocityCap;
-			if (dot.velX > velocityCap) dot.velX = velocityCap;
-			if (dot.velX < -velocityCap) dot.velX = -velocityCap;
-
-			const distanceFromStart = Math.sqrt((dot.x - dot.startX) ** 2 + (dot.y - dot.startY) ** 2);
-			if (distanceFromStart > maxDistanceFromStart) {
-				const angle = Math.atan2(dot.y - dot.startY, dot.x - dot.startX);
-				dot.velX = -Math.cos(angle) * velocity;
-				dot.velY = -Math.sin(angle) * velocity;
-			}
-
-			dot.x += dot.velX;
-			dot.y += dot.velY;
-
-			if (drawDebug) {
-				ctx.fillStyle = 'rgba(255, 0, 0, .3)';
-				ctx.fillRect(dot.startX - 2, dot.startY - 2, 5, 5);
-
-				ctx.translate(dot.startX, dot.startY);
-				ctx.beginPath();
-				ctx.arc(0, 0, maxDistanceFromStart, 0, Math.PI * 2);
-				ctx.strokeStyle = 'rgba(0, 0, 0, .3)';
-				ctx.stroke();
-				ctx.setTransform(1, 0, 0, 1, 0, 0);
-			}
-
-			ctx.fillStyle = 'black';
-			ctx.fillRect(dot.x, dot.y, 3, 3);
-		}
-
-		for (const dot of dots) {
 			dot.velY += Math.round(Math.random()) ? -velocity : velocity;
 			dot.velX += Math.round(Math.random()) ? -velocity : velocity;
 
@@ -114,15 +78,21 @@
 			if (dot.velX > velocityCap) dot.velX = velocityCap;
 			if (dot.velX < -velocityCap) dot.velX = -velocityCap;
 
-			const distanceFromStart = Math.sqrt((dot.x - dot.startX) ** 2 + (dot.y - dot.startY) ** 2);
-			if (distanceFromStart > maxDistanceFromStart) {
-				const angle = Math.atan2(dot.y - dot.startY, dot.x - dot.startX);
-				dot.velX = -Math.cos(angle) * velocity;
-				dot.velY = -Math.sin(angle) * velocity;
+			const offsetX = dot.startX - dot.x;
+			const offsetY = dot.startY - dot.y;
+			if (offsetX > maxDistanceFromStart || offsetX < -maxDistanceFromStart) {
+				dot.velX = -dot.velX;
+			}
+
+			if (offsetY > maxDistanceFromStart || offsetY < -maxDistanceFromStart) {
+				dot.velY = -dot.velY;
 			}
 
 			dot.x += dot.velX;
 			dot.y += dot.velY;
+
+			ctx.fillStyle = 'black';
+			ctx.fillRect(dot.x, dot.y, 3, 3);
 		}
 
 		requestAnimationFrame(update);
@@ -146,9 +116,6 @@
 	<Card class="grid grid-cols-2 items-center gap-4 px-3 py-2">
 		<Label for="clearCheckbox" class="font-bold">CLEAR</Label>
 		<Checkbox id="clearCheckbox" bind:checked={clear} />
-
-		<Label for="drawDebugCheckbox" class="font-bold">DRAW DEBUG</Label>
-		<Checkbox id="drawDebugCheckbox" bind:checked={drawDebug} />
 
 		<Label for="maxDistanceInput" class="font-bold">MAX DISTANCE</Label>
 		<Input
