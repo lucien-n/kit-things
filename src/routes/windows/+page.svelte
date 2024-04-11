@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Desktop } from '$lib/sections/windows';
+	import { Desktop } from '$windows/components';
 </script>
 
 <Desktop />

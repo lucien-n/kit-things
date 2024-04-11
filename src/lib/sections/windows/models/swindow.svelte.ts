@@ -21,23 +21,13 @@ export class Swindow {
 
 	state: SwindowState = $state(SwindowState.FLOATING);
 
-	constructor(
-		title: string,
-		icon?: string,
-		x?: number,
-		y?: number,
-		width?: number,
-		height?: number
-	) {
+	constructor(title: string, icon?: string, position?: Vector, size?: Vector) {
 		this.title = title;
 
 		if (icon) this.icon = icon;
 
-		if (x) this.position.x = x;
-		if (y) this.position.y = y;
-
-		if (width) this.size.x = width;
-		if (height) this.size.y = height;
+		if (position) this.position = position;
+		if (size) this.size = size;
 	}
 
 	enterFullscreen() {

@@ -1,4 +1,4 @@
-import type { Swindow } from '../models/swindow.svelte';
+import type { Swindow } from '$windows/models/swindow.svelte';
 import Window from './window.svelte';
 
 type WindowProps = {
