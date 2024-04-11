@@ -12,7 +12,7 @@
 	];
 </script>
 
-<section class="center flex h-full flex-col space-y-3">
+<section class="flex h-full flex-col items-center justify-center space-y-3">
 	{#each routes as { label, href } (href)}
 		<Link {href}>{label}</Link>
 	{/each}
