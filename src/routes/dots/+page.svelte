@@ -71,8 +71,8 @@
 		}
 
 		for (const dot of dots) {
-			dot.velY += Math.round(Math.random()) ? -velocity : velocity;
-			dot.velX += Math.round(Math.random()) ? -velocity : velocity;
+			dot.velY += velocity;
+			dot.velX += velocity;
 
 			if (dot.velY > velocityCap) dot.velY = velocityCap;
 			if (dot.velY < -velocityCap) dot.velY = -velocityCap;
@@ -89,9 +89,6 @@
 			dot.x += dot.velX;
 			dot.y += dot.velY;
 
-			ctx.fillStyle = 'black';
-			ctx.fillRect(dot.x, dot.y, 3, 3);
-
 			if (drawDebug) {
 				ctx.fillStyle = 'rgba(255, 0, 0, .3)';
 				ctx.fillRect(dot.startX - 2, dot.startY - 2, 5, 5);
@@ -103,6 +100,9 @@
 				ctx.stroke();
 				ctx.setTransform(1, 0, 0, 1, 0, 0);
 			}
+
+			ctx.fillStyle = 'black';
+			ctx.fillRect(dot.x, dot.y, 3, 3);
 		}
 
 		for (const dot of dots) {
