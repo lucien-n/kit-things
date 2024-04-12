@@ -11,6 +11,7 @@
 const PAGES = {
   "/": `/`,
   "/dots": `/dots`,
+  "/quack": `/quack`,
   "/windows": `/windows`
 }
 
@@ -135,7 +136,7 @@ export function route<T extends keyof AllTypes>(key: T, ...params: any[]): strin
 * ```
 */
 export type KIT_ROUTES = {
-  PAGES: { '/': never, '/dots': never, '/windows': never }
+  PAGES: { '/': never, '/dots': never, '/quack': never, '/windows': never }
   SERVERS: Record<string, never>
   ACTIONS: Record<string, never>
   LINKS: Record<string, never>
