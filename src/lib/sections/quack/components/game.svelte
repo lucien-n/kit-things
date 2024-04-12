@@ -50,8 +50,7 @@
 	</div>
 </Card>
 
-<!-- svelte-ignore a11y-positive-tabindex -->
-<canvas tabindex="1" bind:this={canvas} class="absolute left-0 top-0" />
+<canvas bind:this={canvas} class="absolute left-0 top-0" />
 
 {#if game}
 	{@const jumpControlLabel = Controls.jump === ' ' ? 'space' : Controls.jump}
