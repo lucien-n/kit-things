@@ -55,5 +55,7 @@ export class Quack {
 		});
 
 		if (!this.dead) this.y += this.velY;
+
+		if (this.y > window.innerHeight) this.dead = true;
 	}
 }
