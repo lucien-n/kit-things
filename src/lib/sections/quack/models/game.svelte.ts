@@ -16,6 +16,7 @@ export class QuackGame {
 	dt = $state(0);
 
 	playing = $state(false);
+	wallsPassed = $state(0);
 
 	constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
 		this.canvas = canvas;
@@ -64,8 +65,14 @@ export class QuackGame {
 		this.quack.update(this.dt, this.walls);
 		this.playing = !this.quack.dead;
 
-		this.walls.forEach((wall) => wall.update(this.dt));
-		this.walls = this.walls.filter((wall) => wall.x > -Settings.wallWidth);
+		this.walls.forEach((wall) => wall.update(this.dt, this.wallsPassed));
+		this.walls = this.walls.filter((wall) => {
+			const wallOnScreen = wall.x > -Settings.wallWidth;
+
+			if (!wallOnScreen) this.wallsPassed += 1;
+
+			return wallOnScreen;
+		});
 
 		const lastWall = this.walls[this.walls.length - 1] as Wall | undefined;
 		if (!lastWall || lastWall.x < window.innerWidth * 0.7) {

@@ -40,6 +40,9 @@
 	<Label class="font-bold">WALLS</Label>
 	<Label>{game?.walls.length}</Label>
 
+	<Label class="font-bold">PASSED</Label>
+	<Label>{game?.wallsPassed}</Label>
+
 	<Label class="font-bold">VEL</Label>
 	<div class="flex gap-2">
 		<Label>{game?.quack.velX.toFixed(2)}</Label>

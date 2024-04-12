@@ -24,7 +24,8 @@ export class Wall {
 		ctx.fillRect(this.x, this.gapEndY, Settings.wallWidth, window.innerHeight - this.gapEndY);
 	}
 
-	update(dt: number) {
-		this.x -= Settings.wallBaseSpeed * dt;
+	update(dt: number, wallsPassed: number) {
+		const currentSpeed = Settings.wallBaseSpeed + wallsPassed * Settings.wallSpeedIncreaseFactor;
+		this.x -= currentSpeed * dt;
 	}
 }
