@@ -1,5 +1,5 @@
-export class Colors {
-	static background = 'white';
-	static wall = '#AF5';
-	static quack = '#FA3';
+export enum Colors {
+	background = 'white',
+	wall = '#AF5',
+	quack = '#FA3'
 }
