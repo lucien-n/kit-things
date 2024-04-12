@@ -1,5 +1,4 @@
-import { Colors } from './colors';
-import { Controls } from './controls';
+import { Colors, Controls, Settings } from '.';
 
 export type QuackInit = {
 	x?: number;
@@ -42,11 +41,11 @@ export class Quack {
 
 	update(dt: number) {
 		if (this.jump) {
-			this.velY = -(900 * dt);
+			this.velY = -(Settings.quackJumpImpulse * dt);
 			this.jump = false;
 		}
 
-		this.velY += 18 * dt;
+		this.velY += Settings.quackGravity * dt;
 
 		this.y += this.velY;
 	}
