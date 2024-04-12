@@ -27,7 +27,8 @@ export class QuackGame {
 	init() {
 		this.resize();
 
-		this.quack = new Quack({ x: 100, y: this.height / 2 });
+		this.quack = new Quack({ x: this.width * 0.33, y: this.height / 2 });
+		this.walls = [];
 	}
 
 	resize() {
@@ -51,13 +52,17 @@ export class QuackGame {
 	keypress(event: KeyboardEvent) {
 		const key = event.key;
 
-		if (key === Controls.jump && !this.playing) this.playing = true;
+		if (key === Controls.jump && !this.playing) {
+			this.init();
+			this.playing = true;
+		}
 
 		this.quack.keypress(key);
 	}
 
 	update() {
-		this.quack.update(this.dt);
+		this.quack.update(this.dt, this.walls);
+		this.playing = !this.quack.dead;
 
 		this.walls.forEach((wall) => wall.update(this.dt));
 		this.walls = this.walls.filter((wall) => wall.x > -Settings.wallWidth);
@@ -81,7 +86,7 @@ export class QuackGame {
 		this.dt = (this.now - this.prevTime) / 1000;
 		this.prevTime = this.now;
 
-		if (this.playing) {
+		if (this.playing && !this.quack.dead) {
 			this.update();
 		}
 
