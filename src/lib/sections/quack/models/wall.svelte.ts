@@ -1,5 +1,4 @@
-import { Colors } from './colors';
-import { Settings } from './settings';
+import { Colors, Settings } from '.';
 
 export type WallInit = {
 	x?: number;
@@ -26,6 +25,6 @@ export class Wall {
 	}
 
 	update(dt: number) {
-		this.x -= 150 * dt;
+		this.x -= Settings.wallBaseSpeed * dt;
 	}
 }
