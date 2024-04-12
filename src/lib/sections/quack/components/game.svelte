@@ -35,6 +35,9 @@
 	<Label class="font-bold">PLAYING</Label>
 	<Label>{game?.playing}</Label>
 
+	<Label class="font-bold">WALLS</Label>
+	<Label>{game?.walls.length}</Label>
+
 	<Label class="font-bold">VEL</Label>
 	<div class="flex gap-2">
 		<Label>{game?.quack.velX.toFixed(2)}</Label>

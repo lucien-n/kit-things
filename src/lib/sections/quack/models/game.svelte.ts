@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { Colors, Controls, Quack } from '.';
+import { Colors, Controls, Quack, Settings, Wall } from '.';
 
 export class QuackGame {
 	canvas = $state() as HTMLCanvasElement;
@@ -9,6 +9,7 @@ export class QuackGame {
 	height = $state(0);
 
 	quack = $state() as Quack;
+	walls = $state([]) as Wall[];
 
 	now = $state(new Date().getTime());
 	prevTime = $state(this.now);
@@ -57,10 +58,20 @@ export class QuackGame {
 
 	update() {
 		this.quack.update(this.dt);
+
+		this.walls.forEach((wall) => wall.update(this.dt));
+		this.walls = this.walls.filter((wall) => wall.x > -Settings.wallWidth);
+
+		const lastWall = this.walls[this.walls.length - 1] as Wall | undefined;
+		if (!lastWall || lastWall.x < window.innerWidth * 0.7) {
+			const wall = new Wall({ x: window.innerWidth });
+			this.walls.push(wall);
+		}
 	}
 
 	draw() {
 		this.quack.draw(this.ctx);
+		this.walls.forEach((wall) => wall.draw(this.ctx));
 	}
 
 	loop() {
