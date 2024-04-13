@@ -65,14 +65,14 @@ export class QuackGame {
 		this.quack.update(this.dt, this.walls);
 		this.playing = !this.quack.dead;
 
-		this.walls.forEach((wall) => wall.update(this.dt, this.wallsPassed));
-		this.walls = this.walls.filter((wall) => {
-			const wallOnScreen = wall.x > -Settings.wallWidth;
-
-			if (!wallOnScreen) this.wallsPassed += 1;
-
-			return wallOnScreen;
+		this.walls.forEach((wall) => {
+			wall.update(this.dt, this.wallsPassed);
+			if (!wall.passed && this.quack.x > wall.x + Settings.wallWidth) {
+				wall.passed = true;
+				this.wallsPassed++;
+			}
 		});
+		this.walls = this.walls.filter((wall) => wall.x > -Settings.wallWidth);
 
 		const lastWall = this.walls[this.walls.length - 1] as Wall | undefined;
 		if (!lastWall || lastWall.x < window.innerWidth * 0.7) {

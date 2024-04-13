@@ -46,16 +46,17 @@ export class Quack {
 			this.jump = false;
 		}
 		this.velY += Settings.quackGravity * dt;
+		if (this.velY > 12) this.velY = 12;
 
 		walls.forEach((wall) => {
-			if (!(this.x + this.width > wall.x && this.x < wall.x + Settings.wallWidth)) return;
-			if (this.y > wall.gapStartY && this.y + this.height < wall.gapEndY) return;
+			const isInWall = this.x + this.width > wall.x && this.x < wall.x + Settings.wallWidth;
+			const isInGap = this.y > wall.gapStartY && this.y + this.height < wall.gapEndY;
 
-			this.dead = true;
+			if (isInWall && !isInGap) this.dead = true;
 		});
 
-		if (!this.dead) this.y += this.velY;
-
 		if (this.y > window.innerHeight) this.dead = true;
+
+		if (!this.dead) this.y += this.velY;
 	}
 }

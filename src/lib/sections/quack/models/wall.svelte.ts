@@ -10,6 +10,7 @@ export class Wall {
 	x = $state(0);
 	gapStartY = $state(0);
 	gapEndY = $state(0);
+	passed = $state(false)
 
 	constructor({ x }: WallInit) {
 		if (x) this.x = x;
