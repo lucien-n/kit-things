@@ -14,17 +14,33 @@ export class Quack {
 	velX = $state(0);
 	velY = $state(0);
 
-	width = $state(32);
-	height = $state(32);
+	width = $state(28);
+	height = $state(19);
 
 	jump = $state(false);
 	dead = $state(false);
+
+	sprite: HTMLImageElement | null = null;
+	totalFrames = 0;
+	currentFrame = 0;
+	lastFrameAt = 0;
 
 	constructor({ x, y, width, height }: QuackInit) {
 		if (x) this.x = x;
 		if (y) this.y = y;
 		if (width) this.width = width;
 		if (height) this.height = height;
+
+		this.init();
+	}
+
+	init() {
+		const sprite = new Image();
+		sprite.src = 'quack/quack.png';
+		sprite.onload = () => {
+			this.sprite = sprite;
+			this.totalFrames = Math.floor(sprite.width / this.width);
+		};
 	}
 
 	keypress(key: KeyboardEvent['key']) {
@@ -36,8 +52,29 @@ export class Quack {
 	}
 
 	draw(ctx: CanvasRenderingContext2D) {
-		ctx.fillStyle = Colors.quack;
-		ctx.fillRect(this.x, this.y, this.width, this.height);
+		const now = new Date().getTime();
+		if (now - this.lastFrameAt > 250) {
+			this.currentFrame++;
+			this.lastFrameAt = now;
+			if (this.currentFrame >= this.totalFrames) this.currentFrame = 0;
+		}
+
+		if (this.sprite) {
+			ctx.drawImage(
+				this.sprite,
+				this.currentFrame * this.width,
+				0,
+				this.width,
+				this.height,
+				this.x,
+				this.y,
+				this.width,
+				this.height
+			);
+		} else {
+			ctx.fillStyle = Colors.quack;
+			ctx.fillRect(this.x, this.y, this.width, this.height);
+		}
 	}
 
 	update(dt: number, walls: Wall[]) {
