@@ -56,7 +56,7 @@
 	{@const jumpControlLabel = Controls.jump === ' ' ? 'space' : Controls.jump}
 	{#if !game.playing}
 		<div
-			class="flex h-full w-full animate-pulse items-center justify-center bg-opacity-10 backdrop-blur-lg"
+			class="flex h-full w-full items-center justify-center bg-opacity-10 backdrop-blur-lg"
 			transition:fly={{ y: -800, easing: backInOut, duration: 700 }}
 		>
 			<p class="text-5xl font-bold">
