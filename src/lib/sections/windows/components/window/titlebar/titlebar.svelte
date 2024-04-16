@@ -47,7 +47,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <section
 	bind:this={node}
-	class="center relative h-8 select-none justify-between border-b bg-background"
+	class="relative flex h-8 select-none items-center justify-between border-b bg-background"
 	onmousedown={handleMouseDown}
 	onmouseup={handleMouseUp}
 	onmouseleave={handleMouseUp}

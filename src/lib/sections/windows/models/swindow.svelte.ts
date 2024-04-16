@@ -20,6 +20,7 @@ export class Swindow {
 	previousSize: Vector = $state(new Vector(640, 360));
 
 	state: SwindowState = $state(SwindowState.FLOATING);
+	focused: boolean = $state(false);
 
 	constructor(title: string, icon?: string, position?: Vector, size?: Vector) {
 		this.title = title;

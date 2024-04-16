@@ -22,6 +22,9 @@ export class Sdesktop {
 		if (!swindow) return;
 
 		this.removeWindow(id);
+
+		swindow.focused = true;
+
 		this.addWindow(swindow);
 	}
 }
