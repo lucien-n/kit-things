@@ -19,4 +19,8 @@ export class BaseApplication {
 	get type() {
 		return this._type;
 	}
+
+	handleKeypress(event: KeyboardEvent): void {
+		console.log(`keypress on base "${event.key}"`);
+	}
 }

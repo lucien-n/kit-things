@@ -1,11 +1,20 @@
 import { Vector } from '$lib/vector.svelte';
 import { nanoid } from 'nanoid';
+import type { BaseApplication } from './application';
 
 export enum SwindowState {
 	FULLSCREEN = 'FULLSCREEN',
 	FLOATING = 'FLOATING',
 	MINIMIZED = 'MINIMIZED'
 }
+
+export type SwindowInput = {
+	title: string;
+	icon?: string;
+	position?: Vector;
+	size?: Vector;
+	application: BaseApplication;
+};
 
 export class Swindow {
 	id: string = nanoid(12);
@@ -22,8 +31,11 @@ export class Swindow {
 	state: SwindowState = $state(SwindowState.FLOATING);
 	focused: boolean = $state(false);
 
-	constructor(title: string, icon?: string, position?: Vector, size?: Vector) {
+	application = $state() as BaseApplication;
+
+	constructor({ title, icon, position, size, application }: SwindowInput) {
 		this.title = title;
+		this.application = application;
 
 		if (icon) this.icon = icon;
 
@@ -47,5 +59,14 @@ export class Swindow {
 
 	isFullscreen() {
 		return this.state === SwindowState.FULLSCREEN;
+	}
+
+	handleKeypress(event: KeyboardEvent) {
+		if (!this.application) {
+			console.log(`No application for "${this.title}"`);
+			return;
+		}
+
+		this.application.handleKeypress(event);
 	}
 }

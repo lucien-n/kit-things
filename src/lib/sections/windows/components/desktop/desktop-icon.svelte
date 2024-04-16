@@ -8,7 +8,15 @@
 	const { application }: DesktopIconProps = $props();
 
 	const launchApplication = () => {
-		sdesktop.addWindow(new Swindow(application.label, application.icon, new Vector(110, 234)));
+		console.log(`Starting "${application.label}"`);
+		sdesktop.addWindow(
+			new Swindow({
+				title: application.label,
+				icon: application.icon,
+				position: new Vector(110, 234),
+				application: application.application
+			})
+		);
 	};
 </script>
 

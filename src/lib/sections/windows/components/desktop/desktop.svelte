@@ -6,12 +6,17 @@
 	import { Vector } from '$lib/vector.svelte';
 	import { APPLICATIONS } from '$windows/applications';
 	import DesktopIcon from './desktop-icon.svelte';
+	import { BlankApplication } from '$windows/applications/blank.svelte';
 
 	onMount(() => {
-		sdesktop.addWindow(new Swindow('Default window', '😎', new Vector(110, 234)));
-		sdesktop.addWindow(new Swindow('Other window', '🛒', new Vector(758, 180)));
-
-		console.log(sdesktop.swindows.map((win) => win.position.toString()));
+		sdesktop.addWindow(
+			new Swindow({
+				title: 'Default window',
+				icon: '😎',
+				position: new Vector(110, 234),
+				application: new BlankApplication()
+			})
+		);
 	});
 </script>
 

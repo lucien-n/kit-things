@@ -27,6 +27,8 @@
 	});
 </script>
 
+<svelte:window onkeypress={swindow.handleKeypress} />
+
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <article
 	transition:scale
