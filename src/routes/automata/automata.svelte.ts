@@ -7,7 +7,7 @@ export class Automata {
 	#data: AutomataData;
 	#renderer: AutomataRenderer;
 
-	isPaused: boolean = $state(false);
+	isPaused: boolean = $state(true);
 
 	simulationSpeedFactor: number = $state(1);
 
