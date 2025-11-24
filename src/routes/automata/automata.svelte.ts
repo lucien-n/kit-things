@@ -42,17 +42,11 @@ export class Automata {
 			y = Math.floor(idx / size);
 
 			alive = this.#data.getCellAt(x, y);
-
-			neighborsCount = 0;
-
-			if (this.#data.getCellAt(x, y - 1)) neighborsCount++;
-			if (this.#data.getCellAt(x + 1, y)) neighborsCount++;
-			if (this.#data.getCellAt(x, y + 1)) neighborsCount++;
-			if (this.#data.getCellAt(x - 1, y)) neighborsCount++;
+			neighborsCount = this.#data.countNeighbors(x, y);
 
 			next[y][x] =
-				(alive && (neighborsCount === 1 || neighborsCount === 2)) ||
-				(!alive && neighborsCount === 2);
+				(alive && (neighborsCount === 2 || neighborsCount === 3)) ||
+				(!alive && neighborsCount === 3);
 		}
 
 		this.#data.replaceGrid(next);

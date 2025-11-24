@@ -32,4 +32,22 @@ export class AutomataData {
 	replaceGrid(newGrid: boolean[][]): void {
 		this.#grid = newGrid;
 	}
+
+	countNeighbors(x: number, y: number) {
+		let neighborCount = 0;
+
+		let neighborX, neighborY: number;
+		for (let deltaY = -1; deltaY <= 1; deltaY++) {
+			for (let deltaX = -1; deltaX <= 1; deltaX++) {
+				if (deltaX === 0 && deltaY === 0) continue;
+
+				neighborX = x + deltaX;
+				neighborY = y + deltaY;
+
+				if (this.getCellAt(neighborX, neighborY)) neighborCount++;
+			}
+		}
+
+		return neighborCount;
+	}
 }
