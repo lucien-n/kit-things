@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { Link } from '$lib/ui/link';
 	import { route } from '$routes';
-	import { Link } from '$ui/link';
 
 	type Route = {
 		label: string;

@@ -14,9 +14,8 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			$routes: './src/lib/ROUTES.ts',
-			$ui: './src/lib/ui',
 			$windows: './src/lib/sections/windows',
-			$shadcn: './src/lib/shadcn'
+			'&': './src/lib/shadcn'
 		}
 	}
 };

@@ -29,7 +29,7 @@
 
 <svelte:window onkeypress={swindow.handleKeypress} />
 
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <article
 	transition:scale
 	class="absolute border bg-background shadow-md"

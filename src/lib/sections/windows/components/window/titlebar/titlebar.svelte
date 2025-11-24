@@ -44,7 +44,7 @@
 
 <svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp} />
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <section
 	bind:this={node}
 	class="relative flex h-8 select-none items-center justify-between border-b bg-background"

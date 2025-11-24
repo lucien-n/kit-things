@@ -1,9 +1,9 @@
 <script lang="ts">
+	import { Card } from '&/ui/card';
+	import { Checkbox } from '&/ui/checkbox';
+	import { Input } from '&/ui/input';
+	import { Label } from '&/ui/label';
 	import { onMount } from 'svelte';
-	import { Label } from '$shadcn/ui/label';
-	import { Checkbox } from '$shadcn/ui/checkbox';
-	import { Input } from '$shadcn/ui/input';
-	import { Card } from '$shadcn/ui/card';
 
 	type Dot = {
 		startX: number;
@@ -137,4 +137,4 @@
 	</Card>
 </div>
 
-<canvas bind:this={canvas} class="h-full w-full" />
+<canvas bind:this={canvas} class="h-full w-full"></canvas>

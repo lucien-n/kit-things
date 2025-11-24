@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn } from '$ui/cn';
+	import { cn } from '&/utils';
 	import type { LinkProps as Props } from '.';
 
 	const { href, class: className, children, ...props }: Props = $props();

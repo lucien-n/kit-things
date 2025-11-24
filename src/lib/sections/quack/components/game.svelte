@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { Card } from '&/ui/card';
+	import { Label } from '&/ui/label';
 	import { onMount } from 'svelte';
-	import { Controls, QuackGame } from '../models/';
-	import { Card } from '$shadcn/ui/card';
-	import { Label } from '$shadcn/ui/label';
-	import { fly } from 'svelte/transition';
 	import { backInOut } from 'svelte/easing';
+	import { fly } from 'svelte/transition';
+	import { Controls, QuackGame } from '../models/';
 
 	let canvas: HTMLCanvasElement | undefined = $state();
 	let ctx: CanvasRenderingContext2D | null = $state(null);
@@ -28,7 +28,7 @@
 	});
 </script>
 
-<svelte:window on:resize={game?.resize} on:keypress={(event) => game?.keypress(event)} />
+<svelte:window onresize={game?.resize} onkeypress={(event) => game?.keypress(event)} />
 
 <Card class="absolute z-50 m-3 grid w-64 grid-cols-2 gap-3 px-3 py-2 ">
 	<Label class="font-bold">DT</Label>
@@ -50,7 +50,7 @@
 	</div>
 </Card>
 
-<canvas bind:this={canvas} class="absolute left-0 top-0" />
+<canvas bind:this={canvas} class="absolute left-0 top-0"></canvas>
 
 {#if game}
 	{@const jumpControlLabel = Controls.jump === ' ' ? 'space' : Controls.jump}
