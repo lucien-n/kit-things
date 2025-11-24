@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { Button } from '&/ui/button';
+	import * as Tooltip from '&/ui/tooltip';
+	import { PauseIcon, PlayIcon } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { SimulationSpeedSelector } from './(components)/simulation-speed-selector';
 	import { Automata } from './automata.svelte';
 
 	let canvasEl = $state<HTMLCanvasElement | null>(null);
@@ -14,8 +17,29 @@
 	});
 </script>
 
-<div class="absolute left-3 top-3">
-	<Button onclick={() => automata?.pause()}>{automata?.isPaused ? 'Play' : 'Pause'}</Button>
+<div class="absolute top-3 left-3 flex gap-2">
+	<Tooltip.Root>
+		<Tooltip.Trigger>
+			<Button onclick={() => automata?.togglePause()} size="icon" class="cursor-pointer">
+				{#if automata?.isPaused}
+					<PlayIcon />
+				{:else}
+					<PauseIcon />
+				{/if}
+			</Button>
+		</Tooltip.Trigger>
+		<Tooltip.Content side="bottom">
+			{automata?.isPaused ? 'Play simulation' : 'Pause simulation'}
+		</Tooltip.Content>
+	</Tooltip.Root>
+
+	<SimulationSpeedSelector
+		onSelectedSpeedModifier={(newFactor) => {
+			if (!automata) return;
+
+			automata.simulationSpeedFactor = newFactor;
+		}}
+	/>
 </div>
 
 <canvas bind:this={canvasEl}></canvas>
