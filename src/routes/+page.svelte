@@ -9,7 +9,8 @@
 	const routes: Route[] = [
 		{ label: 'Windows', href: route('/windows') },
 		{ label: 'Dots', href: route('/dots') },
-		{ label: 'Quack', href: route('/quack') }
+		{ label: 'Quack', href: route('/quack') },
+		{ label: 'Automata', href: route('/automata') }
 	];
 </script>
 
