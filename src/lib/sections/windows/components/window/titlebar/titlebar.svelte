@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Vector } from '$lib/vector.svelte';
-	import { Cross1, EnterFullScreen, ExitFullScreen } from 'radix-icons-svelte';
+	import FullscreenIcon from '@lucide/svelte/icons/fullscreen';
+	import MinimizeIcon from '@lucide/svelte/icons/minimize';
+	import XIcon from '@lucide/svelte/icons/x';
 	import { TitlebarAction, type TitlebarProps } from '.';
 	import { sdesktop } from '../..';
 
@@ -47,28 +49,28 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <section
 	bind:this={node}
-	class="relative flex h-8 select-none items-center justify-between border-b bg-background"
+	class="bg-background relative flex h-8 items-center justify-between border-b select-none"
 	onmousedown={handleMouseDown}
 	onmouseup={handleMouseUp}
 	onmouseleave={handleMouseUp}
 >
 	<div class="absolute -top-7">{swindow.position}</div>
-	<span class="ml-1 flex gap-1 text-foreground">
+	<span class="text-foreground ml-1 flex gap-1">
 		{swindow.icon}
 		<p>{swindow.title}</p>
 	</span>
 	<div class="flex h-8">
 		{#if swindow.isFullscreen()}
 			<TitlebarAction onclick={() => swindow.exitFullscreen()}>
-				<ExitFullScreen />
+				<MinimizeIcon />
 			</TitlebarAction>
 		{:else}
 			<TitlebarAction onclick={() => swindow.enterFullscreen()}>
-				<EnterFullScreen />
+				<FullscreenIcon />
 			</TitlebarAction>
 		{/if}
 		<TitlebarAction onclick={() => sdesktop.removeWindow(swindow.id)}>
-			<Cross1 />
+			<XIcon />
 		</TitlebarAction>
 	</div>
 </section>
