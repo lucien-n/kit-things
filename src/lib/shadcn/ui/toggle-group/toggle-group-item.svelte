@@ -1,44 +1,34 @@
 <script lang="ts">
 	import { ToggleGroup as ToggleGroupPrimitive } from "bits-ui";
-	import { type ToggleVariants, getToggleGroupCtx } from "./index.js";
+	import { getToggleGroupCtx } from "./toggle-group.svelte";
 	import { cn } from "$lib/shadcn/utils.js";
-	import { toggleVariants } from "$lib/shadcn/ui/ui/toggle/index.js";
-
-	type $$Props = ToggleGroupPrimitive.ItemProps & ToggleVariants;
-
-
-	
-	interface Props {
-		class?: string | undefined | null;
-		variant?: $$Props["variant"];
-		size?: $$Props["size"];
-		value: $$Props["value"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
+	import { type ToggleVariants, toggleVariants } from "$lib/shadcn/ui/toggle/index.js";
 
 	let {
-		class: className = undefined,
-		variant = "default",
-		size = "default",
-		value,
-		children,
-		...rest
-	}: Props = $props();
+		ref = $bindable(null),
+		value = $bindable(),
+		class: className,
+		size,
+		variant,
+		...restProps
+	}: ToggleGroupPrimitive.ItemProps & ToggleVariants = $props();
 
 	const ctx = getToggleGroupCtx();
 </script>
 
 <ToggleGroupPrimitive.Item
+	bind:ref
+	data-slot="toggle-group-item"
+	data-variant={ctx.variant || variant}
+	data-size={ctx.size || size}
 	class={cn(
 		toggleVariants({
 			variant: ctx.variant || variant,
 			size: ctx.size || size,
 		}),
+		"min-w-0 flex-1 shrink-0 rounded-none shadow-none first:rounded-s-md last:rounded-e-md focus:z-10 focus-visible:z-10 data-[variant=outline]:border-s-0 data-[variant=outline]:first:border-s",
 		className
 	)}
 	{value}
-	{...rest}
->
-	{@render children?.()}
-</ToggleGroupPrimitive.Item>
+	{...restProps}
+/>

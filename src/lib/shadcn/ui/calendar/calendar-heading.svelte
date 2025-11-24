@@ -2,26 +2,15 @@
 	import { Calendar as CalendarPrimitive } from "bits-ui";
 	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = CalendarPrimitive.HeadingProps;
-
-	interface Props {
-		class?: $$Props["class"];
-		children?: import('svelte').Snippet<[any]>;
-		[key: string]: any
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: CalendarPrimitive.HeadingProps = $props();
 </script>
 
 <CalendarPrimitive.Heading
-	
-	class={cn("text-sm font-medium", className)}
-	{...rest}
->
-	{#snippet children({ headingValue })}
-		{#if children}{@render children({ headingValue, })}{:else}
-			{headingValue}
-		{/if}
-	{/snippet}
-</CalendarPrimitive.Heading>
+	bind:ref
+	class={cn("px-(--cell-size) text-sm font-medium", className)}
+	{...restProps}
+/>

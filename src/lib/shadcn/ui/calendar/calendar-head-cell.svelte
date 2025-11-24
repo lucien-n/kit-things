@@ -2,21 +2,18 @@
 	import { Calendar as CalendarPrimitive } from "bits-ui";
 	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = CalendarPrimitive.HeadCellProps;
-
-	interface Props {
-		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: CalendarPrimitive.HeadCellProps = $props();
 </script>
 
 <CalendarPrimitive.HeadCell
-	class={cn("w-9 rounded-md text-[0.8rem] font-normal text-muted-foreground", className)}
-	{...rest}
->
-	{@render children?.()}
-</CalendarPrimitive.HeadCell>
+	bind:ref
+	class={cn(
+		"text-muted-foreground w-(--cell-size) rounded-md text-[0.8rem] font-normal",
+		className
+	)}
+	{...restProps}
+/>

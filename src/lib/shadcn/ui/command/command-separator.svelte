@@ -1,15 +1,17 @@
 <script lang="ts">
-	import { Command as CommandPrimitive } from "cmdk-sv";
+	import { Command as CommandPrimitive } from "bits-ui";
 	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = CommandPrimitive.SeparatorProps;
-	interface Props {
-		class?: string | undefined | null;
-		[key: string]: any
-	}
-
-	let { class: className = undefined, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: CommandPrimitive.SeparatorProps = $props();
 </script>
 
-<CommandPrimitive.Separator class={cn("-mx-1 h-px bg-border", className)} {...rest} />
+<CommandPrimitive.Separator
+	bind:ref
+	data-slot="command-separator"
+	class={cn("bg-border -mx-1 h-px", className)}
+	{...restProps}
+/>

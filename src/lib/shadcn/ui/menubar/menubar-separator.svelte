@@ -2,15 +2,16 @@
 	import { Menubar as MenubarPrimitive } from "bits-ui";
 	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = MenubarPrimitive.SeparatorProps;
-
-	interface Props {
-		class?: $$Props["class"];
-		[key: string]: any
-	}
-
-	let { class: className = undefined, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: MenubarPrimitive.SeparatorProps = $props();
 </script>
 
-<MenubarPrimitive.Separator class={cn("-mx-1 my-1 h-px bg-muted", className)} {...rest} />
+<MenubarPrimitive.Separator
+	bind:ref
+	data-slot="menubar-separator"
+	class={cn("bg-border -mx-1 my-1 h-px", className)}
+	{...restProps}
+/>

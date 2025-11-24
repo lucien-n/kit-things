@@ -1,17 +1,16 @@
 <script lang="ts">
 	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
 
-	type $$Props = ContextMenuPrimitive.RadioGroupProps;
-
-	interface Props {
-		value?: $$Props["value"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
-
-	let { value = $bindable(undefined), children, ...rest }: Props = $props();
+	let {
+		ref = $bindable(null),
+		value = $bindable(""),
+		...restProps
+	}: ContextMenuPrimitive.RadioGroupProps = $props();
 </script>
 
-<ContextMenuPrimitive.RadioGroup {...rest} bind:value>
-	{@render children?.()}
-</ContextMenuPrimitive.RadioGroup>
+<ContextMenuPrimitive.RadioGroup
+	bind:ref
+	bind:value
+	data-slot="context-menu-radio-group"
+	{...restProps}
+/>

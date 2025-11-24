@@ -1,44 +1,31 @@
 <script lang="ts">
 	import type { HTMLAnchorAttributes } from "svelte/elements";
-	import { cn } from "$lib/shadcn/utils.js";
-
-	type $$Props = HTMLAnchorAttributes & {
-		el?: HTMLAnchorElement;
-		asChild?: boolean;
-	};
-
-	interface Props {
-		href?: $$Props["href"];
-		el?: $$Props["el"];
-		asChild?: $$Props["asChild"];
-		class?: $$Props["class"];
-		children?: import('svelte').Snippet<[any]>;
-		[key: string]: any
-	}
+	import type { Snippet } from "svelte";
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
 
 	let {
+		ref = $bindable(null),
+		class: className,
 		href = undefined,
-		el = $bindable(undefined),
-		asChild = false,
-		class: className = undefined,
+		child,
 		children,
-		...rest
-	}: Props = $props();
-	
+		...restProps
+	}: WithElementRef<HTMLAnchorAttributes> & {
+		child?: Snippet<[{ props: HTMLAnchorAttributes }]>;
+	} = $props();
 
-	let attrs: Record<string, unknown> = $derived({
-		class: cn("transition-colors hover:text-foreground", className),
+	const attrs = $derived({
+		"data-slot": "breadcrumb-link",
+		class: cn("hover:text-foreground transition-colors", className),
 		href,
-		...rest,
+		...restProps,
 	});
-
-	
 </script>
 
-{#if asChild}
-	{@render children?.({ attrs, })}
+{#if child}
+	{@render child({ props: attrs })}
 {:else}
-	<a bind:this={el} {...attrs} {href}>
-		{@render children?.({ attrs, })}
+	<a bind:this={ref} {...attrs}>
+		{@render children?.()}
 	</a>
 {/if}

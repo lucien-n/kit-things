@@ -1,16 +1,7 @@
 <script lang="ts">
-	import * as Button from "$lib/shadcn/ui/ui/button/index.js";
-	interface Props {
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
+	import { Button, type ButtonProps } from "$lib/shadcn/ui/button/index.js";
 
-	let { children, ...rest }: Props = $props();
-
-	type $$Props = Button.Props;
-	type $$Events = Button.Events;
+	let { ref = $bindable(null), ...restProps }: ButtonProps = $props();
 </script>
 
-<Button.Root type="submit" on:click on:keydown {...rest}>
-	{@render children?.()}
-</Button.Root>
+<Button bind:ref type="submit" {...restProps} />

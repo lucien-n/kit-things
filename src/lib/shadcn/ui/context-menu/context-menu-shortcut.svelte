@@ -1,22 +1,20 @@
 <script lang="ts">
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
 	import type { HTMLAttributes } from "svelte/elements";
-	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = HTMLAttributes<HTMLSpanElement>;
-
-	interface Props {
-		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		...restProps
+	}: WithElementRef<HTMLAttributes<HTMLSpanElement>> = $props();
 </script>
 
 <span
-	class={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)}
-	{...rest}
+	bind:this={ref}
+	data-slot="context-menu-shortcut"
+	class={cn("text-muted-foreground ms-auto text-xs tracking-widest", className)}
+	{...restProps}
 >
 	{@render children?.()}
 </span>

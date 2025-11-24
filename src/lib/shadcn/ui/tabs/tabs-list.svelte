@@ -2,24 +2,19 @@
 	import { Tabs as TabsPrimitive } from "bits-ui";
 	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = TabsPrimitive.ListProps;
-
-	interface Props {
-		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: TabsPrimitive.ListProps = $props();
 </script>
 
 <TabsPrimitive.List
+	bind:ref
+	data-slot="tabs-list"
 	class={cn(
-		"inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+		"bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
 		className
 	)}
-	{...rest}
->
-	{@render children?.()}
-</TabsPrimitive.List>
+	{...restProps}
+/>

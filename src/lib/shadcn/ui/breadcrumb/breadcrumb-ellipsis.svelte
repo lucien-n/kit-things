@@ -1,29 +1,23 @@
 <script lang="ts">
-	import Ellipsis from "lucide-svelte/icons/ellipsis";
+	import EllipsisIcon from "@lucide/svelte/icons/ellipsis";
 	import type { HTMLAttributes } from "svelte/elements";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { cn, type WithElementRef, type WithoutChildren } from "$lib/shadcn/utils.js";
 
-	type $$Props = HTMLAttributes<HTMLSpanElement> & {
-		el?: HTMLSpanElement;
-	};
-
-	interface Props {
-		el?: $$Props["el"];
-		class?: $$Props["class"];
-		[key: string]: any
-	}
-
-	let { el = $bindable(undefined), class: className = undefined, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: WithoutChildren<WithElementRef<HTMLAttributes<HTMLSpanElement>>> = $props();
 </script>
 
 <span
-	bind:this={el}
+	bind:this={ref}
+	data-slot="breadcrumb-ellipsis"
 	role="presentation"
 	aria-hidden="true"
-	class={cn("flex h-9 w-9 items-center justify-center", className)}
-	{...rest}
+	class={cn("flex size-9 items-center justify-center", className)}
+	{...restProps}
 >
-	<Ellipsis class="h-4 w-4" />
+	<EllipsisIcon class="size-4" />
 	<span class="sr-only">More</span>
 </span>

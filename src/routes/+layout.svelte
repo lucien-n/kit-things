@@ -1,6 +1,6 @@
 <script>
-	import '../app.pcss';
-	/** @type {{children?: import('svelte').Snippet}} */
+	import '../app.css';
+
 	let { children } = $props();
 </script>
 

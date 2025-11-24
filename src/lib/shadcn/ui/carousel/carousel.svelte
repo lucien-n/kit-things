@@ -1,73 +1,59 @@
 <script lang="ts">
-	import { run, createBubbler } from 'svelte/legacy';
-
-	const bubble = createBubbler();
-	import { writable } from "svelte/store";
-	import { onDestroy } from "svelte";
-	import { type CarouselAPI, type CarouselProps, setEmblaContex } from "./context.js";
-	import { cn } from "$lib/shadcn/utils.js";
-
-	type $$Props = CarouselProps;
-
-
-	interface Props {
-		opts?: any;
-		plugins?: NonNullable<$$Props["plugins"]>;
-		api?: $$Props["api"];
-		orientation?: NonNullable<$$Props["orientation"]>;
-		class?: $$Props["class"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
+	import {
+		type CarouselAPI,
+		type CarouselProps,
+		type EmblaContext,
+		setEmblaContext,
+	} from "./context.js";
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
 
 	let {
+		ref = $bindable(null),
 		opts = {},
 		plugins = [],
-		api = $bindable(undefined),
+		setApi = () => {},
 		orientation = "horizontal",
-		class: className = undefined,
+		class: className,
 		children,
-		...rest
-	}: Props = $props();
-	
+		...restProps
+	}: WithElementRef<CarouselProps> = $props();
 
-	const apiStore = writable<CarouselAPI | undefined>(undefined);
-	const orientationStore = writable(orientation);
-	const canScrollPrev = writable(false);
-	const canScrollNext = writable(false);
-	const optionsStore = writable(opts);
-	const pluginStore = writable(plugins);
+	let carouselState = $state<EmblaContext>({
+		api: undefined,
+		scrollPrev,
+		scrollNext,
+		orientation,
+		canScrollNext: false,
+		canScrollPrev: false,
+		handleKeyDown,
+		options: opts,
+		plugins,
+		onInit,
+		scrollSnaps: [],
+		selectedIndex: 0,
+		scrollTo,
+	});
 
-	run(() => {
-		orientationStore.set(orientation);
-	});
-	run(() => {
-		pluginStore.set(plugins);
-	});
-	run(() => {
-		optionsStore.set(opts);
-	});
+	setEmblaContext(carouselState);
 
 	function scrollPrev() {
-		api?.scrollPrev();
+		carouselState.api?.scrollPrev();
 	}
+
 	function scrollNext() {
-		api?.scrollNext();
+		carouselState.api?.scrollNext();
 	}
 
-	function onSelect(api: CarouselAPI) {
-		if (!api) return;
-		canScrollPrev.set(api.canScrollPrev());
-		canScrollNext.set(api.canScrollNext());
+	function scrollTo(index: number, jump?: boolean) {
+		carouselState.api?.scrollTo(index, jump);
 	}
 
-	run(() => {
-		if (api) {
-			onSelect(api);
-			api.on("select", onSelect);
-			api.on("reInit", onSelect);
-		}
-	});
+	function onSelect() {
+		if (!carouselState.api) return;
+		carouselState.selectedIndex = carouselState.api.selectedScrollSnap();
+		carouselState.canScrollNext = carouselState.api.canScrollNext();
+		carouselState.canScrollPrev = carouselState.api.canScrollPrev();
+	}
 
 	function handleKeyDown(e: KeyboardEvent) {
 		if (e.key === "ArrowLeft") {
@@ -79,36 +65,29 @@
 		}
 	}
 
-	setEmblaContex({
-		api: apiStore,
-		scrollPrev,
-		scrollNext,
-		orientation: orientationStore,
-		canScrollNext,
-		canScrollPrev,
-		handleKeyDown,
-		options: optionsStore,
-		plugins: pluginStore,
-		onInit,
-	});
-
 	function onInit(event: CustomEvent<CarouselAPI>) {
-		api = event.detail;
-		apiStore.set(api);
+		carouselState.api = event.detail;
+		setApi(carouselState.api);
+
+		carouselState.scrollSnaps = carouselState.api.scrollSnapList();
+		carouselState.api.on("select", onSelect);
+		onSelect();
 	}
 
-	onDestroy(() => {
-		api?.off("select", onSelect);
+	$effect(() => {
+		return () => {
+			carouselState.api?.off("select", onSelect);
+		};
 	});
 </script>
 
 <div
+	bind:this={ref}
+	data-slot="carousel"
 	class={cn("relative", className)}
-	onmouseenter={bubble('mouseenter')}
-	onmouseleave={bubble('mouseleave')}
 	role="region"
 	aria-roledescription="carousel"
-	{...rest}
+	{...restProps}
 >
 	{@render children?.()}
 </div>

@@ -2,19 +2,16 @@
 	import { AlertDialog as AlertDialogPrimitive } from "bits-ui";
 	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = AlertDialogPrimitive.TitleProps;
-
-	interface Props {
-		class?: $$Props["class"];
-		level?: $$Props["level"];
-		children?: import('svelte').Snippet;
-		[key: string]: any
-	}
-
-	let { class: className = undefined, level = "h3", children, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		...restProps
+	}: AlertDialogPrimitive.TitleProps = $props();
 </script>
 
-<AlertDialogPrimitive.Title class={cn("text-lg font-semibold", className)} {level} {...rest}>
-	{@render children?.()}
-</AlertDialogPrimitive.Title>
+<AlertDialogPrimitive.Title
+	bind:ref
+	data-slot="alert-dialog-title"
+	class={cn("text-lg font-semibold", className)}
+	{...restProps}
+/>

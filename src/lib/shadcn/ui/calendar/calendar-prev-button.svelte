@@ -1,35 +1,31 @@
 <script lang="ts">
 	import { Calendar as CalendarPrimitive } from "bits-ui";
-	import ChevronLeft from "lucide-svelte/icons/chevron-left";
-	import { buttonVariants } from "$lib/shadcn/ui/ui/button/index.js";
+	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left";
+	import { buttonVariants, type ButtonVariant } from "$lib/shadcn/ui/button/index.js";
 	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = CalendarPrimitive.PrevButtonProps;
-	type $$Events = CalendarPrimitive.PrevButtonEvents;
-
-	interface Props {
-		class?: $$Props["class"];
-		children?: import('svelte').Snippet<[any]>;
-		[key: string]: any
-	}
-
-	let { class: className = undefined, children, ...rest }: Props = $props();
-	
+	let {
+		ref = $bindable(null),
+		class: className,
+		children,
+		variant = "ghost",
+		...restProps
+	}: CalendarPrimitive.PrevButtonProps & {
+		variant?: ButtonVariant;
+	} = $props();
 </script>
 
+{#snippet Fallback()}
+	<ChevronLeftIcon class="size-4" />
+{/snippet}
+
 <CalendarPrimitive.PrevButton
-	on:click
+	bind:ref
 	class={cn(
-		buttonVariants({ variant: "outline" }),
-		"h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+		buttonVariants({ variant }),
+		"size-(--cell-size) select-none bg-transparent p-0 disabled:opacity-50 rtl:rotate-180",
 		className
 	)}
-	{...rest}
-	
->
-	{#snippet children({ builder })}
-		{#if children}{@render children({ builder, })}{:else}
-			<ChevronLeft class="h-4 w-4" />
-		{/if}
-	{/snippet}
-</CalendarPrimitive.PrevButton>
+	children={children || Fallback}
+	{...restProps}
+/>

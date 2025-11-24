@@ -1,44 +1,23 @@
 <script lang="ts">
-	import { createBubbler } from 'svelte/legacy';
-
-	const bubble = createBubbler();
+	import { cn, type WithElementRef, type WithoutChildren } from "$lib/shadcn/utils.js";
 	import type { HTMLTextareaAttributes } from "svelte/elements";
-	import { cn } from "$lib/shadcn/utils.js";
 
-	type $$Props = HTMLTextareaAttributes;
-
-	
-
-	// Workaround for https://github.com/sveltejs/svelte/issues/9305
-	// Fixed in Svelte 5, but not backported to 4.x.
-	interface Props {
-		class?: $$Props["class"];
-		value?: $$Props["value"];
-		readonly?: $$Props["readonly"];
-		[key: string]: any
-	}
-
-	let { class: className = undefined, value = $bindable(undefined), readonly = undefined, ...rest }: Props = $props();
+	let {
+		ref = $bindable(null),
+		value = $bindable(),
+		class: className,
+		"data-slot": dataSlot = "textarea",
+		...restProps
+	}: WithoutChildren<WithElementRef<HTMLTextareaAttributes>> = $props();
 </script>
 
 <textarea
+	bind:this={ref}
+	data-slot={dataSlot}
 	class={cn(
-		"flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+		"border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 field-sizing-content shadow-xs flex min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base outline-none transition-[color,box-shadow] focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
 		className
 	)}
 	bind:value
-	{readonly}
-	onblur={bubble('blur')}
-	onchange={bubble('change')}
-	onclick={bubble('click')}
-	onfocus={bubble('focus')}
-	onkeydown={bubble('keydown')}
-	onkeypress={bubble('keypress')}
-	onkeyup={bubble('keyup')}
-	onmouseover={bubble('mouseover')}
-	onmouseenter={bubble('mouseenter')}
-	onmouseleave={bubble('mouseleave')}
-	onpaste={bubble('paste')}
-	oninput={bubble('input')}
-	{...rest}
+	{...restProps}
 ></textarea>
