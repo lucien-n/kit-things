@@ -3,8 +3,15 @@ import type { AutomataWorld } from './automata-world';
 
 export class AutomataRenderer {
 	#ctx: CanvasRenderingContext2D;
-	#offsetX = 0;
-	#offsetY = 0;
+
+	#camX = 0;
+	#camY = 0;
+
+	#isDragging = false;
+	#dragStartX = 0;
+	#dragStartY = 0;
+	#camStartX = 0;
+	#camStartY = 0;
 
 	constructor(canvasEl: HTMLCanvasElement, settings: AutomataSettings) {
 		const ctx = canvasEl.getContext('2d');
@@ -12,87 +19,100 @@ export class AutomataRenderer {
 		this.#ctx = ctx;
 
 		this.#ctx.imageSmoothingEnabled = false;
-
-		window.addEventListener('resize', this.#handleResize.bind(this, settings));
-		this.#handleResize(settings);
-
 		canvasEl.style.background = '#222';
+
+		canvasEl.addEventListener('pointerdown', this.#onPointerDown.bind(this));
+		canvasEl.addEventListener('pointermove', this.#onPointerMove.bind(this));
+		canvasEl.addEventListener('pointerup', () => (this.#isDragging = false));
+		canvasEl.addEventListener('pointerleave', () => (this.#isDragging = false));
+
+		window.addEventListener('resize', () => this.#onresize());
+		this.#onresize();
 	}
 
-	screenToGrid(
-		clientX: number,
-		clientY: number,
-		settings: AutomataSettings
-	): { cellX: number; cellY: number } {
+	screenToGrid(clientX: number, clientY: number, settings: AutomataSettings) {
 		const canvas = this.#ctx.canvas;
 		const rect = canvas.getBoundingClientRect();
 
 		const scaleX = canvas.width / rect.width;
 		const scaleY = canvas.height / rect.height;
+
 		const canvasX = (clientX - rect.left) * scaleX;
 		const canvasY = (clientY - rect.top) * scaleY;
 
-		const localX = canvasX - this.#offsetX;
-		const localY = canvasY - this.#offsetY;
+		const worldX = canvasX - this.#camX;
+		const worldY = canvasY - this.#camY;
 
-		const cellX = Math.floor(localX / settings.CELL_SIZE);
-		const cellY = Math.floor(localY / settings.CELL_SIZE);
-
-		return { cellX, cellY };
+		return {
+			cellX: Math.floor(worldX / settings.CELL_SIZE),
+			cellY: Math.floor(worldY / settings.CELL_SIZE)
+		};
 	}
 
 	draw(world: AutomataWorld, settings: AutomataSettings) {
 		const ctx = this.#ctx;
 		const canvas = ctx.canvas;
 
-		ctx.save();
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.restore();
 
-		let cellX, cellY: number;
-		let chunkWorldX, chunkWorldY: number;
-		let idx: number;
+		ctx.setTransform(1, 0, 0, 1, this.#camX, this.#camY);
+
 		for (const chunk of world.getChunks()) {
+			const baseX = chunk.chunkX * settings.CHUNK_SIZE * settings.CELL_SIZE;
+			const baseY = chunk.chunkY * settings.CHUNK_SIZE * settings.CELL_SIZE;
+
 			ctx.fillStyle = '#eee';
 
-			const chunkWorldX = chunk.chunkX * settings.CHUNK_SIZE;
-			const chunkWorldY = chunk.chunkY * settings.CHUNK_SIZE;
+			for (let i = 0; i < settings.CHUNK_SIZE * settings.CHUNK_SIZE; i++) {
+				const cx = i % settings.CHUNK_SIZE;
+				const cy = (i / settings.CHUNK_SIZE) | 0;
 
-			for (let idx = 0; idx < settings.CHUNK_SIZE * settings.CHUNK_SIZE; idx++) {
-				const cellX = idx % settings.CHUNK_SIZE;
-				const cellY = (idx / settings.CHUNK_SIZE) | 0;
+				if (!chunk.getCellAt(cx, cy)) continue;
 
-				if (!chunk.getCellAt(cellX, cellY)) continue;
-
-				const worldX = (chunkWorldX + cellX) * settings.CELL_SIZE;
-				const worldY = (chunkWorldY + cellY) * settings.CELL_SIZE;
-
-				ctx.fillRect(worldX, worldY, settings.CELL_SIZE, settings.CELL_SIZE);
+				ctx.fillRect(
+					baseX + cx * settings.CELL_SIZE,
+					baseY + cy * settings.CELL_SIZE,
+					settings.CELL_SIZE,
+					settings.CELL_SIZE
+				);
 			}
 
 			ctx.strokeStyle = '#444';
 			ctx.strokeRect(
-				chunkWorldX * settings.CELL_SIZE,
-				chunkWorldY * settings.CELL_SIZE,
-				settings.CELL_SIZE * settings.CHUNK_SIZE,
-				settings.CELL_SIZE * settings.CHUNK_SIZE
+				baseX,
+				baseY,
+				settings.CHUNK_SIZE * settings.CELL_SIZE,
+				settings.CHUNK_SIZE * settings.CELL_SIZE
 			);
 		}
 	}
 
-	get ctx(): CanvasRenderingContext2D {
+	get ctx() {
 		return this.#ctx;
 	}
 
-	#handleResize(settings: AutomataSettings) {
+	#onresize() {
 		const canvas = this.#ctx.canvas;
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
+	}
 
-		this.#offsetX = canvas.width / 2 - (settings.CELL_SIZE * settings.CHUNK_SIZE) / 2;
-		this.#offsetY = canvas.height / 2 - (settings.CELL_SIZE * settings.CHUNK_SIZE) / 2;
+	#onPointerDown(e: PointerEvent) {
+		if (!e.ctrlKey || e.button !== 0) return;
 
-		this.#ctx.setTransform(1, 0, 0, 1, this.#offsetX, this.#offsetY);
+		this.#isDragging = true;
+		this.#dragStartX = e.clientX;
+		this.#dragStartY = e.clientY;
+
+		this.#camStartX = this.#camX;
+		this.#camStartY = this.#camY;
+	}
+
+	#onPointerMove(e: PointerEvent) {
+		if (!this.#isDragging) return;
+
+		this.#camX = this.#camStartX + (e.clientX - this.#dragStartX);
+		this.#camY = this.#camStartY + (e.clientY - this.#dragStartY);
 	}
 }
