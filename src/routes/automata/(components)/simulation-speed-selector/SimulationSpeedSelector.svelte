@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { buttonVariants } from '&/ui/button';
 	import * as ToggleGroup from '&/ui/toggle-group';
 	import { cn } from '&/utils';
 	import { SimulationSpeedModifier, simulationSpeedModifiers } from '.';
@@ -27,8 +26,7 @@
 		<ToggleGroup.Item
 			value={id}
 			class={cn(
-				buttonVariants(),
-				'cursor-pointer',
+				'cursor-pointer px-3',
 				idx !== 0 ? 'rounded-l-none' : '',
 				idx !== Object.keys(simulationSpeedModifiers).length - 1 ? 'rounded-r-none' : ''
 			)}
