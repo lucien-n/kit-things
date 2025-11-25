@@ -1,20 +1,19 @@
 import { simulationSpeedModifiers } from './(components)/simulation-speed-selector';
-import { automataRuleSpecs } from './(specs)';
-import { AutomataData } from './automata-data';
 import { AutomataRenderer } from './automata-renderer';
 import { AutomataSettings } from './automata-settings';
 import { AutomataState } from './automata-state.svelte';
+import { AutomataWorld } from './automata-world';
 
 export class Automata {
 	#settings: AutomataSettings;
-	#data: AutomataData;
+	#world: AutomataWorld;
 	#renderer: AutomataRenderer;
 
 	public readonly state: AutomataState = new AutomataState();
 
 	constructor(canvasEl: HTMLCanvasElement) {
 		this.#settings = new AutomataSettings();
-		this.#data = new AutomataData(this.#settings);
+		this.#world = new AutomataWorld(this.#settings);
 		this.#renderer = new AutomataRenderer(canvasEl, this.#settings);
 
 		canvasEl.addEventListener('click', this.handleClick.bind(this));
@@ -24,7 +23,7 @@ export class Automata {
 	handleClick(ev: PointerEvent) {
 		const { cellX, cellY } = this.#renderer.screenToGrid(ev.clientX, ev.clientY, this.#settings);
 
-		this.#data.flipCellAt(cellX, cellY);
+		this.#world.flipCellAt(cellX, cellY);
 	}
 
 	handleKeypress(ev: KeyboardEvent) {
@@ -40,24 +39,7 @@ export class Automata {
 
 	tick() {
 		if (!this.state.isPaused) {
-			const size = this.#settings.GRID_SIZE;
-
-			const next = Array.from({ length: size }, () => Array.from({ length: size }, () => false));
-
-			let x, y: number;
-			let isAlive: boolean;
-			let neighborsCount: number;
-			for (let idx = 0; idx < size * size; idx++) {
-				x = idx % size;
-				y = Math.floor(idx / size);
-
-				isAlive = this.#data.getCellAt(x, y);
-				neighborsCount = this.#data.countNeighbors(x, y);
-
-				next[y][x] = automataRuleSpecs[this.state.rule].value(isAlive, neighborsCount);
-			}
-
-			this.#data.replaceGrid(next);
+			this.#world.tick(this.state.rule);
 		}
 
 		setTimeout(
@@ -70,7 +52,7 @@ export class Automata {
 		this.tick();
 
 		const loop = () => {
-			this.#renderer.draw(this.#data, this.#settings);
+			this.#renderer.draw(this.#world, this.#settings);
 			requestAnimationFrame(loop);
 		};
 

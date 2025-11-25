@@ -1,5 +1,5 @@
-import type { AutomataData } from './automata-data';
 import type { AutomataSettings } from './automata-settings';
+import type { AutomataWorld } from './automata-world';
 
 export class AutomataRenderer {
 	#ctx: CanvasRenderingContext2D;
@@ -39,7 +39,7 @@ export class AutomataRenderer {
 		return { cellX, cellY };
 	}
 
-	draw(data: AutomataData, settings: AutomataSettings) {
+	draw(world: AutomataWorld, settings: AutomataSettings) {
 		const ctx = this.#ctx;
 		const canvas = ctx.canvas;
 
@@ -48,30 +48,38 @@ export class AutomataRenderer {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.restore();
 
-		ctx.fillStyle = '#eee';
-		let x, y: number;
-		for (let i = 0; i < settings.GRID_SIZE * settings.GRID_SIZE; i++) {
-			x = i % settings.GRID_SIZE;
-			y = Math.floor(i / settings.GRID_SIZE);
+		let cellX, cellY: number;
+		let chunkWorldX, chunkWorldY: number;
+		let idx: number;
+		for (const chunk of world.getChunks()) {
+			ctx.fillStyle = '#eee';
 
-			if (data.getCellAt(x, y))
-				ctx.fillRect(
-					x * settings.CELL_SIZE,
-					y * settings.CELL_SIZE,
-					settings.CELL_SIZE,
-					settings.CELL_SIZE
-				);
+			chunkWorldX = chunk.chunkX * settings.CHUNK_SIZE;
+			chunkWorldY = chunk.chunkY * settings.CHUNK_SIZE;
+
+			for (idx = 0; idx < settings.CHUNK_SIZE * settings.CHUNK_SIZE; idx++) {
+				cellX = idx % settings.CHUNK_SIZE;
+				cellY = Math.floor(idx / settings.CHUNK_SIZE);
+
+				if (chunk.getCellAt(cellX, cellY))
+					ctx.fillRect(
+						cellX * settings.CELL_SIZE + chunkWorldX,
+						cellY * settings.CELL_SIZE + chunkWorldY,
+						settings.CELL_SIZE,
+						settings.CELL_SIZE
+					);
+			}
+
+			ctx.strokeStyle = '#444';
+			ctx.beginPath();
+			ctx.rect(
+				chunkWorldX,
+				chunkWorldY,
+				settings.CELL_SIZE * settings.CHUNK_SIZE,
+				settings.CELL_SIZE * settings.CHUNK_SIZE
+			);
+			ctx.stroke();
 		}
-
-		ctx.strokeStyle = '#444';
-		ctx.beginPath();
-		ctx.rect(
-			0,
-			0,
-			settings.CELL_SIZE * settings.GRID_SIZE,
-			settings.CELL_SIZE * settings.GRID_SIZE
-		);
-		ctx.stroke();
 	}
 
 	get ctx(): CanvasRenderingContext2D {
@@ -83,8 +91,8 @@ export class AutomataRenderer {
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
 
-		this.#offsetX = canvas.width / 2 - (settings.CELL_SIZE * settings.GRID_SIZE) / 2;
-		this.#offsetY = canvas.height / 2 - (settings.CELL_SIZE * settings.GRID_SIZE) / 2;
+		this.#offsetX = canvas.width / 2 - (settings.CELL_SIZE * settings.CHUNK_SIZE) / 2;
+		this.#offsetY = canvas.height / 2 - (settings.CELL_SIZE * settings.CHUNK_SIZE) / 2;
 
 		this.#ctx.setTransform(1, 0, 0, 1, this.#offsetX, this.#offsetY);
 	}
