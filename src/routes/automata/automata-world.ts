@@ -76,7 +76,7 @@ export class AutomataWorld {
 		for (const chunk of this.#chunks.values()) {
 			for (cellY = 0; cellY < size; cellY++) {
 				for (cellX = 0; cellX < size; cellX++) {
-					isAlive = chunk.grid[cellY * size + cellX] != 0;
+					isAlive = chunk.getCellAt(cellX, cellY);
 					neighborsCount = 0;
 
 					for (deltaY = -1; deltaY <= 1; deltaY++) {
@@ -86,7 +86,9 @@ export class AutomataWorld {
 
 							if (chunk.isInBound(neighborX, neighborY)) {
 								if (chunk.getCellAt(neighborX, neighborY)) neighborsCount++;
-							} else if (this.getCellAt(chunk.chunkX + neighborX, chunk.chunkY + neighborY))
+							} else if (
+								this.getCellAt(chunk.chunkX * size + neighborX, chunk.chunkY * size + neighborY)
+							)
 								neighborsCount++;
 						}
 					}
@@ -100,28 +102,8 @@ export class AutomataWorld {
 				}
 			}
 
-			console.log(chunk.nextGrid.some((v) => v === 1));
-
 			chunk.grid = chunk.nextGrid;
 		}
-	}
-
-	countNeighbors(x: number, y: number) {
-		let neighborCount = 0;
-
-		let neighborX, neighborY: number;
-		for (let deltaY = -1; deltaY <= 1; deltaY++) {
-			for (let deltaX = -1; deltaX <= 1; deltaX++) {
-				if (deltaX === 0 && deltaY === 0) continue;
-
-				neighborX = x + deltaX;
-				neighborY = y + deltaY;
-
-				if (this.getCellAt(neighborX, neighborY)) neighborCount++;
-			}
-		}
-
-		return neighborCount;
 	}
 
 	getChunks(): AutomataChunk[] {

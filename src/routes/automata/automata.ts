@@ -17,17 +17,10 @@ export class Automata {
 		this.#renderer = new AutomataRenderer(canvasEl, this.#settings);
 		this.state = new AutomataState();
 
-		canvasEl.addEventListener('click', this.handleClick.bind(this));
 		canvasEl.addEventListener('mousedown', this.handleMouseDown.bind(this));
 		canvasEl.addEventListener('mouseup', this.handleMouseUp.bind(this));
 		canvasEl.addEventListener('mousemove', this.handleMouseMove.bind(this));
 		window.addEventListener('keydown', this.handleKeypress.bind(this));
-	}
-
-	handleClick(ev: PointerEvent) {
-		const { cellX, cellY } = this.#renderer.screenToGrid(ev.clientX, ev.clientY, this.#settings);
-
-		this.#world.flipCellAt(cellX, cellY);
 	}
 
 	handleMouseDown() {
