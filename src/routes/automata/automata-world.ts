@@ -5,7 +5,13 @@ import type { AutomataSettings } from './automata-settings';
 export class AutomataWorld {
 	#chunks: Map<number, AutomataChunk> = new Map();
 
-	constructor(public readonly settings: AutomataSettings) {}
+	constructor(public readonly settings: AutomataSettings) {
+		// for (let y = 0; y <= 4; y++) {
+		// 	for (let x = 0; x <= 4; x++) {
+		// 		this.#chunks.set(this.hashCoords(x, y), new AutomataChunk(x, y, this.settings));
+		// 	}
+		// }
+	}
 
 	hashCoords(x: number, y: number) {
 		return (x << 16) ^ y;
@@ -65,25 +71,38 @@ export class AutomataWorld {
 	tick(rule: AutomataRule) {
 		const size = this.settings.CHUNK_SIZE;
 
-		let cellX, cellY, worldX, worldY, neighborsCount: number;
+		let cellX, cellY, deltaX, deltaY, neighborX, neighborY, neighborsCount: number;
 		let isAlive: boolean;
 		for (const chunk of this.#chunks.values()) {
-			const next = Array.from({ length: size * size }, () => false);
+			for (cellY = 0; cellY < size; cellY++) {
+				for (cellX = 0; cellX < size; cellX++) {
+					isAlive = chunk.grid[cellY * size + cellX] != 0;
+					neighborsCount = 0;
 
-			for (let idx = 0; idx < size * size; idx++) {
-				cellX = idx % size;
-				cellY = (idx / size) | 0;
+					for (deltaY = -1; deltaY <= 1; deltaY++) {
+						for (deltaX = -1; deltaX <= 1; deltaX++) {
+							neighborX = cellX + deltaX;
+							neighborY = cellY + deltaY;
 
-				worldX = chunk.chunkX * size + cellX;
-				worldY = chunk.chunkY * size + cellY;
+							if (chunk.isInBound(neighborX, neighborY)) {
+								if (chunk.getCellAt(neighborX, neighborY)) neighborsCount++;
+							} else if (this.getCellAt(chunk.chunkX + neighborX, chunk.chunkY + neighborY))
+								neighborsCount++;
+						}
+					}
 
-				isAlive = this.getCellAt(worldX, worldY);
-				neighborsCount = this.countNeighbors(worldX, worldY);
-
-				next[idx] = automataRuleSpecs[rule].value(isAlive, neighborsCount);
+					chunk.nextGrid[cellY * size + cellX] = automataRuleSpecs[rule].value(
+						isAlive,
+						neighborsCount
+					)
+						? 1
+						: 0;
+				}
 			}
 
-			chunk.replaceGrid(next);
+			console.log(chunk.nextGrid.some((v) => v === 1));
+
+			chunk.grid = chunk.nextGrid;
 		}
 	}
 

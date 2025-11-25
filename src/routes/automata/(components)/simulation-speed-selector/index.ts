@@ -4,8 +4,9 @@ export enum SimulationSpeedModifier {
 	Quarter = 'Quarter',
 	Half = 'Half',
 	One = 'One',
-	Two = 'Two',
-	Five = 'Five'
+	Five = 'Five',
+	Ten = 'Ten',
+	Fifty = 'Fifty'
 }
 
 export const simulationSpeedModifiers: Record<
@@ -24,13 +25,17 @@ export const simulationSpeedModifiers: Record<
 		label: 'x1',
 		value: 1
 	},
-	[SimulationSpeedModifier.Two]: {
-		label: 'x2',
-		value: 2
-	},
 	[SimulationSpeedModifier.Five]: {
 		label: 'x5',
 		value: 5
+	},
+	[SimulationSpeedModifier.Ten]: {
+		label: 'x10',
+		value: 10
+	},
+	[SimulationSpeedModifier.Fifty]: {
+		label: 'x50',
+		value: 50
 	}
 };
 

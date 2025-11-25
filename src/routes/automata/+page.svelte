@@ -16,6 +16,15 @@
 
 {#if automata}
 	<Toolbar {automata} />
+
+	<div class="absolute top-3 right-3">
+		<div class="grid grid-cols-2 gap-3">
+			{#each Object.entries(automata.state.debug) as [id, text] (id)}
+				<strong>{id}</strong>
+				<p>{text}</p>
+			{/each}
+		</div>
+	</div>
 {/if}
 
 <canvas bind:this={canvasEl}></canvas>

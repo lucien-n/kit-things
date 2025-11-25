@@ -55,7 +55,7 @@ export class AutomataRenderer {
 		};
 	}
 
-	draw(world: AutomataWorld, settings: AutomataSettings) {
+	draw(world: AutomataWorld, settings: AutomataSettings, drawGrid: boolean) {
 		const ctx = this.#ctx;
 		const canvas = ctx.canvas;
 
@@ -84,13 +84,15 @@ export class AutomataRenderer {
 				);
 			}
 
-			ctx.strokeStyle = '#444';
-			ctx.strokeRect(
-				baseX,
-				baseY,
-				settings.CHUNK_SIZE * settings.CELL_SIZE,
-				settings.CHUNK_SIZE * settings.CELL_SIZE
-			);
+			if (drawGrid) {
+				ctx.strokeStyle = '#444';
+				ctx.strokeRect(
+					baseX,
+					baseY,
+					settings.CHUNK_SIZE * settings.CELL_SIZE,
+					settings.CHUNK_SIZE * settings.CELL_SIZE
+				);
+			}
 		}
 	}
 

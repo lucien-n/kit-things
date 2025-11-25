@@ -9,14 +9,18 @@ export class Automata {
 	#world: AutomataWorld;
 	#renderer: AutomataRenderer;
 
-	public readonly state: AutomataState = new AutomataState();
+	readonly state: AutomataState;
 
 	constructor(canvasEl: HTMLCanvasElement) {
 		this.#settings = new AutomataSettings();
 		this.#world = new AutomataWorld(this.#settings);
 		this.#renderer = new AutomataRenderer(canvasEl, this.#settings);
+		this.state = new AutomataState();
 
 		canvasEl.addEventListener('click', this.handleClick.bind(this));
+		canvasEl.addEventListener('mousedown', this.handleMouseDown.bind(this));
+		canvasEl.addEventListener('mouseup', this.handleMouseUp.bind(this));
+		canvasEl.addEventListener('mousemove', this.handleMouseMove.bind(this));
 		window.addEventListener('keydown', this.handleKeypress.bind(this));
 	}
 
@@ -24,6 +28,29 @@ export class Automata {
 		const { cellX, cellY } = this.#renderer.screenToGrid(ev.clientX, ev.clientY, this.#settings);
 
 		this.#world.flipCellAt(cellX, cellY);
+	}
+
+	handleMouseDown() {
+		this.state.isMousePressed = true;
+	}
+
+	handleMouseUp() {
+		this.state.isMousePressed = false;
+	}
+
+	handleMouseMove(ev: MouseEvent) {
+		this.state.mousePos = { x: ev.clientX, y: ev.clientY };
+
+		if (this.state.isMousePressed) {
+			const { cellX, cellY } = this.#renderer.screenToGrid(
+				this.state.mousePos.x,
+				this.state.mousePos.y,
+				this.#settings
+			);
+			this.#world.setCellAt(cellX, cellY, true);
+		}
+
+		this.state.prevMousePos = this.state.mousePos;
 	}
 
 	handleKeypress(ev: KeyboardEvent) {
@@ -39,7 +66,10 @@ export class Automata {
 
 	tick() {
 		if (!this.state.isPaused) {
+			const t1 = performance.now();
 			this.#world.tick(this.state.rule);
+			const tickTime = performance.now() - t1;
+			this.state.debug.lastTickTime = tickTime.toFixed(2) + 'ms';
 		}
 
 		setTimeout(
@@ -52,7 +82,7 @@ export class Automata {
 		this.tick();
 
 		const loop = () => {
-			this.#renderer.draw(this.#world, this.#settings);
+			this.#renderer.draw(this.#world, this.#settings, this.state.drawGrid);
 			requestAnimationFrame(loop);
 		};
 
