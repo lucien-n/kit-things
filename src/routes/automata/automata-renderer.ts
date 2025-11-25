@@ -11,6 +11,8 @@ export class AutomataRenderer {
 		if (!ctx) throw new Error('Could not get 2d canvas rendering context');
 		this.#ctx = ctx;
 
+		this.#ctx.imageSmoothingEnabled = false;
+
 		window.addEventListener('resize', this.#handleResize.bind(this, settings));
 		this.#handleResize(settings);
 
@@ -54,31 +56,28 @@ export class AutomataRenderer {
 		for (const chunk of world.getChunks()) {
 			ctx.fillStyle = '#eee';
 
-			chunkWorldX = chunk.chunkX * settings.CHUNK_SIZE;
-			chunkWorldY = chunk.chunkY * settings.CHUNK_SIZE;
+			const chunkWorldX = chunk.chunkX * settings.CHUNK_SIZE;
+			const chunkWorldY = chunk.chunkY * settings.CHUNK_SIZE;
 
-			for (idx = 0; idx < settings.CHUNK_SIZE * settings.CHUNK_SIZE; idx++) {
-				cellX = idx % settings.CHUNK_SIZE;
-				cellY = Math.floor(idx / settings.CHUNK_SIZE);
+			for (let idx = 0; idx < settings.CHUNK_SIZE * settings.CHUNK_SIZE; idx++) {
+				const cellX = idx % settings.CHUNK_SIZE;
+				const cellY = (idx / settings.CHUNK_SIZE) | 0;
 
-				if (chunk.getCellAt(cellX, cellY))
-					ctx.fillRect(
-						cellX * settings.CELL_SIZE + chunkWorldX,
-						cellY * settings.CELL_SIZE + chunkWorldY,
-						settings.CELL_SIZE,
-						settings.CELL_SIZE
-					);
+				if (!chunk.getCellAt(cellX, cellY)) continue;
+
+				const worldX = (chunkWorldX + cellX) * settings.CELL_SIZE;
+				const worldY = (chunkWorldY + cellY) * settings.CELL_SIZE;
+
+				ctx.fillRect(worldX, worldY, settings.CELL_SIZE, settings.CELL_SIZE);
 			}
 
 			ctx.strokeStyle = '#444';
-			ctx.beginPath();
-			ctx.rect(
-				chunkWorldX,
-				chunkWorldY,
+			ctx.strokeRect(
+				chunkWorldX * settings.CELL_SIZE,
+				chunkWorldY * settings.CELL_SIZE,
 				settings.CELL_SIZE * settings.CHUNK_SIZE,
 				settings.CELL_SIZE * settings.CHUNK_SIZE
 			);
-			ctx.stroke();
 		}
 	}
 

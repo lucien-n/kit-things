@@ -8,7 +8,7 @@ export class AutomataWorld {
 	constructor(public readonly settings: AutomataSettings) {}
 
 	hashCoords(x: number, y: number) {
-		return (x << this.settings.CHUNK_SIZE) ^ y;
+		return (x << 16) ^ y;
 	}
 
 	private worldToChunkCoords(x: number, y: number): { chunkX: number; chunkY: number } {
@@ -21,15 +21,9 @@ export class AutomataWorld {
 	private worldToCellCoords(
 		worldX: number,
 		worldY: number,
-		chunkX?: number,
-		chunkY?: number
+		chunkX: number,
+		chunkY: number
 	): { cellX: number; cellY: number } {
-		if (!chunkX || !chunkY) {
-			const { chunkX: cx, chunkY: cy } = this.worldToChunkCoords(worldX, worldY);
-			chunkX = cx;
-			chunkY = cy;
-		}
-
 		const cellX = worldX - chunkX * this.settings.CHUNK_SIZE;
 		const cellY = worldY - chunkY * this.settings.CHUNK_SIZE;
 
@@ -69,22 +63,24 @@ export class AutomataWorld {
 	}
 
 	tick(rule: AutomataRule) {
-		for (const chunk of this.#chunks.values()) {
-			const size = this.settings.CHUNK_SIZE;
+		const size = this.settings.CHUNK_SIZE;
 
+		let cellX, cellY, worldX, worldY, neighborsCount: number;
+		let isAlive: boolean;
+		for (const chunk of this.#chunks.values()) {
 			const next = Array.from({ length: size * size }, () => false);
 
-			let x, y: number;
-			let isAlive: boolean;
-			let neighborsCount: number;
 			for (let idx = 0; idx < size * size; idx++) {
-				x = idx % size;
-				y = Math.floor(idx / size);
+				cellX = idx % size;
+				cellY = (idx / size) | 0;
 
-				isAlive = this.getCellAt(x, y);
-				neighborsCount = this.countNeighbors(x, y);
+				worldX = chunk.chunkX * size + cellX;
+				worldY = chunk.chunkY * size + cellY;
 
-				next[y * size + x] = automataRuleSpecs[rule].value(isAlive, neighborsCount);
+				isAlive = this.getCellAt(worldX, worldY);
+				neighborsCount = this.countNeighbors(worldX, worldY);
+
+				next[idx] = automataRuleSpecs[rule].value(isAlive, neighborsCount);
 			}
 
 			chunk.replaceGrid(next);
