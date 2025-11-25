@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Automata } from '../../automata.svelte';
+	import type { Automata } from '../../automata';
 	import { PauseButton } from '../pause-button';
 	import { SimulationSpeedSelector } from '../simulation-speed-selector';
 

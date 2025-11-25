@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Toolbar } from './(components)/toolbar';
-	import { Automata } from './automata.svelte';
+	import { Automata } from './automata';
 
 	let canvasEl = $state<HTMLCanvasElement | null>(null);
 	let automata = $state<Automata | null>(null);
