@@ -1,4 +1,4 @@
 export class AutomataSettings {
-	CELL_SIZE = 16;
-	GRID_SIZE = 48;
+	CELL_SIZE = 8;
+	GRID_SIZE = 128;
 }
