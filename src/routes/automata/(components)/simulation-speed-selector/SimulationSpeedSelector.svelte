@@ -5,24 +5,21 @@
 	import { SimulationSpeedModifier, simulationSpeedModifiers } from '.';
 
 	interface Props {
-		onSelectedSpeedModifier: (factor: number) => void;
+		selectedModifier: SimulationSpeedModifier;
 	}
 
-	const { onSelectedSpeedModifier }: Props = $props();
-
-	let selectedModifiers = $state<SimulationSpeedModifier[]>([SimulationSpeedModifier.One]);
+	let { selectedModifier = $bindable() }: Props = $props();
 </script>
 
 <ToggleGroup.Root
 	type="multiple"
 	bind:value={
-		() => selectedModifiers,
+		() => [selectedModifier],
 		(newModifiers) => {
 			const newModifier = newModifiers[1];
 			if (!newModifier) return;
 
-			selectedModifiers = [newModifier];
-			onSelectedSpeedModifier(simulationSpeedModifiers[newModifier].value);
+			selectedModifier = newModifier;
 		}
 	}
 >

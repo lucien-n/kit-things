@@ -10,12 +10,10 @@
 </script>
 
 <div class="absolute top-3 left-3 flex gap-2">
-	<PauseButton isPaused={automata?.isPaused ?? true} onclick={() => automata?.togglePause()} />
-
-	<SimulationSpeedSelector
-		onSelectedSpeedModifier={(newFactor) => {
-			if (!automata) return;
-			automata.simulationSpeedFactor = newFactor;
-		}}
+	<PauseButton
+		isPaused={automata?.state.isPaused ?? true}
+		onclick={() => automata?.togglePause()}
 	/>
+
+	<SimulationSpeedSelector bind:selectedModifier={automata.state.simulationSpeedModifier} />
 </div>

@@ -1,15 +1,15 @@
+import { simulationSpeedModifiers } from './(components)/simulation-speed-selector';
 import { AutomataData } from './automata-data';
 import { AutomataRenderer } from './automata-renderer';
 import { AutomataSettings } from './automata-settings';
+import { AutomataState } from './automata-state.svelte';
 
 export class Automata {
 	#settings: AutomataSettings;
 	#data: AutomataData;
 	#renderer: AutomataRenderer;
 
-	isPaused: boolean = $state(true);
-
-	simulationSpeedFactor: number = $state(1);
+	public readonly state: AutomataState = new AutomataState();
 
 	constructor(canvasEl: HTMLCanvasElement) {
 		this.#settings = new AutomataSettings();
@@ -34,11 +34,11 @@ export class Automata {
 	}
 
 	togglePause() {
-		this.isPaused = !this.isPaused;
+		this.state.isPaused = !this.state.isPaused;
 	}
 
 	tick() {
-		if (!this.isPaused) {
+		if (!this.state.isPaused) {
 			const size = this.#settings.GRID_SIZE;
 
 			const next = Array.from({ length: size }, () => Array.from({ length: size }, () => false));
@@ -61,7 +61,10 @@ export class Automata {
 			this.#data.replaceGrid(next);
 		}
 
-		setTimeout(() => this.tick(), 1000 / 8 / this.simulationSpeedFactor);
+		setTimeout(
+			() => this.tick(),
+			1000 / 8 / simulationSpeedModifiers[this.state.simulationSpeedModifier].value
+		);
 	}
 
 	run() {
