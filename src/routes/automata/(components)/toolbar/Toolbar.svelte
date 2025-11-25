@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Automata } from '../../automata';
+	import { AutomataRuleSelect } from '../automata-rule-select';
 	import { PauseButton } from '../pause-button';
 	import { SimulationSpeedSelector } from '../simulation-speed-selector';
 
@@ -16,4 +17,6 @@
 	/>
 
 	<SimulationSpeedSelector bind:selectedModifier={automata.state.simulationSpeedModifier} />
+
+	<AutomataRuleSelect bind:rule={automata.state.rule} />
 </div>

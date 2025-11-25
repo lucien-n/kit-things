@@ -1,4 +1,5 @@
 import { simulationSpeedModifiers } from './(components)/simulation-speed-selector';
+import { automataRuleSpecs } from './(specs)';
 import { AutomataData } from './automata-data';
 import { AutomataRenderer } from './automata-renderer';
 import { AutomataSettings } from './automata-settings';
@@ -44,18 +45,16 @@ export class Automata {
 			const next = Array.from({ length: size }, () => Array.from({ length: size }, () => false));
 
 			let x, y: number;
-			let alive: boolean;
+			let isAlive: boolean;
 			let neighborsCount: number;
 			for (let idx = 0; idx < size * size; idx++) {
 				x = idx % size;
 				y = Math.floor(idx / size);
 
-				alive = this.#data.getCellAt(x, y);
+				isAlive = this.#data.getCellAt(x, y);
 				neighborsCount = this.#data.countNeighbors(x, y);
 
-				next[y][x] =
-					(alive && (neighborsCount === 2 || neighborsCount === 3)) ||
-					(!alive && neighborsCount === 3);
+				next[y][x] = automataRuleSpecs[this.state.rule].value(isAlive, neighborsCount);
 			}
 
 			this.#data.replaceGrid(next);
