@@ -13,6 +13,10 @@ export class AutomataRenderer {
 	#camStartX = 0;
 	#camStartY = 0;
 
+	#zoom = 1;
+	#minZoom = 0.1;
+	#maxZoom = 4;
+
 	constructor(canvasEl: HTMLCanvasElement, settings: AutomataSettings) {
 		const ctx = canvasEl.getContext('2d');
 		if (!ctx) throw new Error('Could not get 2d canvas rendering context');
@@ -25,6 +29,8 @@ export class AutomataRenderer {
 		canvasEl.addEventListener('pointermove', this.#onPointerMove.bind(this));
 		canvasEl.addEventListener('pointerup', () => (this.#isDragging = false));
 		canvasEl.addEventListener('pointerleave', () => (this.#isDragging = false));
+
+		canvasEl.addEventListener('wheel', this.#onWheel.bind(this), { passive: false });
 
 		window.addEventListener('resize', () => this.#onresize());
 		this.#onresize();
@@ -40,8 +46,8 @@ export class AutomataRenderer {
 		const canvasX = (clientX - rect.left) * scaleX;
 		const canvasY = (clientY - rect.top) * scaleY;
 
-		const worldX = canvasX - this.#camX;
-		const worldY = canvasY - this.#camY;
+		const worldX = (canvasX - this.#camX) / this.#zoom;
+		const worldY = (canvasY - this.#camY) / this.#zoom;
 
 		return {
 			cellX: Math.floor(worldX / settings.CELL_SIZE),
@@ -56,7 +62,7 @@ export class AutomataRenderer {
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		ctx.setTransform(1, 0, 0, 1, this.#camX, this.#camY);
+		ctx.setTransform(this.#zoom, 0, 0, this.#zoom, this.#camX, this.#camY);
 
 		for (const chunk of world.getChunks()) {
 			const baseX = chunk.chunkX * settings.CHUNK_SIZE * settings.CELL_SIZE;
@@ -99,7 +105,7 @@ export class AutomataRenderer {
 	}
 
 	#onPointerDown(e: PointerEvent) {
-		if (!e.ctrlKey || e.button !== 0) return;
+		if (e.button !== 1) return;
 
 		this.#isDragging = true;
 		this.#dragStartX = e.clientX;
@@ -114,5 +120,29 @@ export class AutomataRenderer {
 
 		this.#camX = this.#camStartX + (e.clientX - this.#dragStartX);
 		this.#camY = this.#camStartY + (e.clientY - this.#dragStartY);
+	}
+
+	#onWheel(e: WheelEvent) {
+		e.preventDefault();
+
+		const zoomIntensity = 0.001;
+		const oldZoom = this.#zoom;
+
+		this.#zoom -= e.deltaY * zoomIntensity;
+		this.#zoom = Math.min(this.#maxZoom, Math.max(this.#minZoom, this.#zoom));
+
+		const canvas = this.#ctx.canvas;
+		const rect = canvas.getBoundingClientRect();
+		const scaleX = canvas.width / rect.width;
+		const scaleY = canvas.height / rect.height;
+
+		const mouseCanvasX = (e.clientX - rect.left) * scaleX;
+		const mouseCanvasY = (e.clientY - rect.top) * scaleY;
+
+		const worldXBefore = (mouseCanvasX - this.#camX) / oldZoom;
+		const worldYBefore = (mouseCanvasY - this.#camY) / oldZoom;
+
+		this.#camX = mouseCanvasX - worldXBefore * this.#zoom;
+		this.#camY = mouseCanvasY - worldYBefore * this.#zoom;
 	}
 }
