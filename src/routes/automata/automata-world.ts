@@ -5,13 +5,7 @@ import type { AutomataSettings } from './automata-settings';
 export class AutomataWorld {
 	#chunks: Map<number, AutomataChunk> = new Map();
 
-	constructor(public readonly settings: AutomataSettings) {
-		// for (let y = 0; y <= 4; y++) {
-		// 	for (let x = 0; x <= 4; x++) {
-		// 		this.#chunks.set(this.hashCoords(x, y), new AutomataChunk(x, y, this.settings));
-		// 	}
-		// }
-	}
+	constructor(public readonly settings: AutomataSettings) {}
 
 	hashCoords(x: number, y: number) {
 		return (x << 16) ^ y;

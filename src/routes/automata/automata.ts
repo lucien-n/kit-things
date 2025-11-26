@@ -21,7 +21,7 @@ export class Automata {
 		canvasEl.addEventListener('mousedown', this.handleMouseDown.bind(this));
 		canvasEl.addEventListener('mouseup', this.handleMouseUp.bind(this));
 		canvasEl.addEventListener('mousemove', this.handleMouseMove.bind(this));
-		window.addEventListener('keydown', this.handleKeypress.bind(this));
+		window.addEventListener('keydown', this.handleKeyDown.bind(this));
 	}
 
 	handleMouseDown() {
@@ -47,7 +47,7 @@ export class Automata {
 		this.state.prevMousePos = this.state.mousePos;
 	}
 
-	handleKeypress(ev: KeyboardEvent) {
+	handleKeyDown(ev: KeyboardEvent) {
 		switch (ev.code) {
 			case KeyCode.Space:
 				this.togglePause();
