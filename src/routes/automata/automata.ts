@@ -3,6 +3,7 @@ import { AutomataRenderer } from './automata-renderer';
 import { AutomataSettings } from './automata-settings';
 import { AutomataState } from './automata-state.svelte';
 import { AutomataWorld } from './automata-world';
+import { KeyCode } from './types';
 
 export class Automata {
 	#settings: AutomataSettings;
@@ -47,8 +48,8 @@ export class Automata {
 	}
 
 	handleKeypress(ev: KeyboardEvent) {
-		switch (ev.key) {
-			case ' ':
+		switch (ev.code) {
+			case KeyCode.Space:
 				this.togglePause();
 		}
 	}
