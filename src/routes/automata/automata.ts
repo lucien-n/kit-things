@@ -59,6 +59,7 @@ export class Automata {
 	}
 
 	tick() {
+		const t1 = performance.now();
 		if (!this.state.isPaused) {
 			const t1 = performance.now();
 			this.#world.tick(this.state.rule);
@@ -66,9 +67,13 @@ export class Automata {
 			this.state.debug.lastTickTime = tickTime.toFixed(2) + 'ms';
 		}
 
+		const tickTime = performance.now() - t1;
 		setTimeout(
 			() => this.tick(),
-			1000 / 8 / simulationSpeedModifiers[this.state.simulationSpeedModifier].value
+			Math.max(
+				0,
+				1000 / 8 / simulationSpeedModifiers[this.state.simulationSpeedModifier].value - tickTime
+			)
 		);
 	}
 
